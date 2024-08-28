@@ -107,8 +107,8 @@ PROGRAM prgGame
   // Zvìtšování hada podle skóre a nasledovani hlavy hada
   FOR i := 1 TO score DO
     snake[i, 2] := 3;
-    snake[i + 1, 0] := snakePrevious[i, 0];
-    snake[i + 1, 1] := snakePrevious[i, 1];
+    snake[i, 0] := snakePrevious[i - 1, 0];
+    snake[i, 1] := snakePrevious[i - 1, 1];
   END_FOR;
 
   // Kolize hada sama se sebou
