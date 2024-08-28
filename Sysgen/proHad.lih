@@ -1,0 +1,1492 @@
+{LIBFILE="LOCALLIB\STDLIB_V22_20180619.MLB"}
+(* Knihovna vıvojového systému Mosaic *)
+(* Jméno souboru : C:\TecoLib\StdLib_V22_20180619.mlb *)
+(* Knihovna : StdLib 2.2 *)
+(* Autor : Teco a.s. *)
+(* Autorská práva : (c) 2006-2018 Teco a.s. *)
+(* Verze IEC pøekladaèe : 4.1.4.0 *)
+(* Verze assembleru : 4.3.00 *)
+
+//{Knihovna : StdLib 2.2  }
+(* Historie: *)
+(*
+v1.0 30.06.2004 Nem  Uvodni verze knihovny
+                     Bloky : R_TRIG, F_TRIG, SR, RS, TON, TOF, CTU, CTD, TP
+v1.1 09.08.2004	Nem  Oprava bloku TOF
+v1.2 06.09.2004	Nem  Upraveny komentare funkcnich bloku v knihovne
+v1.3 16.05.2005	Nem  Osetren stav casovacu TON/TOF/TP po restartu
+                     v pripade, ze jsou casovace cele v rem zone
+v1.4            Nem  vynechana
+v1.5 01.11.2005	Nem  Upraveny casovace TON/TOF/TP tak, aby skutecne 
+                     fungovaly rem zone i pri teplem restartu
+                     Funkcni bloky R_TRIG, F_TRIG, SR a RS prepsany do asm
+v1.6 07.11.2005	Nem  Doplneny funkce ADD_TIME, SUB_TIME, ADD_TOD_TIME, 
+                     ADD_DT_TIME, SUB_DATE_DATE, SUB_TOD_TIME, SUB_TOD_TOD, 
+                     SUB_DT_TIME, SUB_DT_DT a CONCAT_DATE_TOD
+v1.7 17.03.2006	Nem  Oprava masky u TON/TOF/PT
+                     Oprava funkce SUB_DT_DT
+v1.8 04.04.2006	Nem  Zkraceny komentare u TON, .... kvuli FBD
+v1.9 29.09.2008	Nem  Opraven funkcni blok TOF po zapnuti (casovac cely prepracovan)
+v2.0 25.02.2009	Nem  Do funkcniho bloku TP doplnena kontrola predvolby
+                     (je-li predvolba nula, casovac negeneruje zadny pulz)
+     19.05.2010	Nem  Doplneny komentare v cestine (pro Mosaic od v2.0.23)
+     27.10.2010 Nem  Doplnena historie verzi v anglictine
+v2.1 14.05.2014	Nem  Ve funkcnim bloku TP se trvale vyhodnocuje nabezna
+                     hrana na vstupu IN
+v2.2 19.06.2018	Nem  Doplnena funkce IS_INVALID_REAL
+*)
+
+(*----------------------------------------------------------------------------*)
+
+__DECL FUNCTION_BLOCK R_TRIG
+(*Blok pro vyhodnocení nábìné hrany*)
+  VAR_INPUT
+    CLK              : bool;
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;
+  END_VAR
+  VAR
+    M                : bool;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK F_TRIG
+(*Blok pro vyhodnocení sestupné hrany*)
+  VAR_INPUT
+    CLK              : bool;
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;
+  END_VAR
+  VAR
+    M                : bool :=  TRUE;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK SR
+(*RS klopnı obvod (s dominantní funkcí Set)*)
+  VAR_INPUT
+    S1               : bool;
+    R                : bool;
+  END_VAR
+  VAR_OUTPUT
+    Q1               : bool;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK RS
+(*RS klopnı obvod (s dominantní funkcí Reset)*)
+  VAR_INPUT
+    S                : bool;
+    R1               : bool;
+  END_VAR
+  VAR_OUTPUT
+    Q1               : bool;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK CTU
+(*Èítac nahoru*)
+  VAR_INPUT
+    CU               : bool R_EDGE;  (*vstup pro èítání nahoru*)
+    R                : bool;  (*reset èítaèe*)
+    PV               : int;  (*pøedvolba èítaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èítaèe*)
+    CV               : int;  (*hodnota èítaèe*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK CTD
+(*Èítac dolù*)
+  VAR_INPUT
+    CD               : bool R_EDGE;  (*vstup pro èítání dolù*)
+    LD               : bool;  (*vstup pro nastavení pøedvolby*)
+    PV               : int;  (*pøedvolba èítaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èítaèe*)
+    CV               : int;  (*hodnota èítaèe*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK CTUD
+(*Obousmìrnı èítac*)
+  VAR_INPUT
+    CU               : bool R_EDGE;  (*vstup pro èítání nahoru*)
+    CD               : bool R_EDGE;  (*vstup pro èítání dolù*)
+    R                : bool;  (*reset èítaèe*)
+    LD               : bool;  (*vstup pro nastavení pøedvolby*)
+    PV               : int;  (*pøedvolba èítaèe*)
+  END_VAR
+  VAR_OUTPUT
+    QU               : bool;  (*vıstup èítaèe nahoru*)
+    QD               : bool;  (*vıstup èítaèe dolù*)
+    CV               : int;  (*hodnota èítaèe*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK TON
+(*Èasovaè TON (zpodìní nábìné hrany)*)
+  VAR_INPUT
+    IN               : bool;  (*vstup èasovaèe*)
+    PT               : time;  (*pøedvolba èasovaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èasovaèe*)
+    ET               : time;  (*aktuální hodnota èasovaèe*)
+  END_VAR
+  VAR
+    IN_r_edge        : R_TRIG;
+    LT               : time;  (*last tick value ( 1ms resolution)*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK TOF
+(*Èasovaè TOF (zpodìní sestupné hrany)*)
+  VAR_INPUT
+    IN               : bool;  (*vstup èasovaèe*)
+    PT               : time;  (*pøedvolba èasovaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èasovaèe*)
+    ET               : time;  (*aktuální hodnota èasovaèe*)
+  END_VAR
+  VAR
+    IN_f_edge        : F_TRIG;
+    LT               : time;  (*last tick value ( 1ms resolution)*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK TP
+(*Èasovaè TP (generuje pulz dané šíøky)*)
+  VAR_INPUT
+    IN               : bool;  (*vstup èasovaèe*)
+    PT               : time;  (*pøedvolba èasovaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èasovaèe*)
+    ET               : time;  (*aktuální hodnota èasovaèe*)
+  END_VAR
+  VAR
+    IN_r_edge        : R_TRIG;
+    LT               : time;  (*last tick value ( 1ms resolution)*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION IS_INVALID_REAL : bool
+(*Vrací TRUE pokud má num hodnotu NaN, +INF nebo -INF*)
+  VAR_INPUT
+    num              : real;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ADD_TIME : time
+(*------------------------------------------------------------------------------
+  TIME := TIME + TIME;*)
+  VAR_INPUT
+    IN1              : time;
+    IN2              : time;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SUB_TIME : time
+(*------------------------------------------------------------------------------
+  TIME := TIME - TIME;*)
+  VAR_INPUT
+    IN1              : time;
+    IN2              : time;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ADD_TOD_TIME : tod
+(*------------------------------------------------------------------------------
+  TIME_OF_DAY := TIME_OF_DAY + TIME;*)
+  VAR_INPUT
+    IN1              : tod;
+    IN2              : time;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ADD_DT_TIME : dt
+(*------------------------------------------------------------------------------
+  DATE_AND_TIME := DATE_AND_TIME + TIME;*)
+  VAR_INPUT
+    IN1              : dt;
+    IN2              : time;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SUB_DATE_DATE : time
+(*------------------------------------------------------------------------------
+  TIME := DATE - DATE;*)
+  VAR_INPUT
+    IN1              : date;
+    IN2              : date;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SUB_TOD_TIME : tod
+(*------------------------------------------------------------------------------
+  TIME_OF_DAY := TIME_OF_DAY - TIME;*)
+  VAR_INPUT
+    IN1              : tod;
+    IN2              : time;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SUB_TOD_TOD : time
+(*------------------------------------------------------------------------------
+  TIME := TIME_OF_DAY - TIME_OF_DAY;*)
+  VAR_INPUT
+    IN1              : tod;
+    IN2              : tod;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SUB_DT_TIME : dt
+(*------------------------------------------------------------------------------
+  DATE_AND_TIME := DATE_AND_TIME - TIME;*)
+  VAR_INPUT
+    IN1              : dt;
+    IN2              : time;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SUB_DT_DT : time
+(*------------------------------------------------------------------------------
+  TIME := DATE_AND_TIME - DATE_AND_TIME;*)
+  VAR_INPUT
+    IN1              : dt;
+    IN2              : dt;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION CONCAT_DATE_TOD : dt
+(*------------------------------------------------------------------------------
+  DATE_AND_TIME := DATE + TIME_OF_DAY;*)
+  VAR_INPUT
+    IN1              : date;
+    IN2              : tod;
+  END_VAR
+END_FUNCTION
+
+
+
+{LIBFILE="LOCALLIB\SYSLIB_V50_20230202.MLB"}
+(* Knihovna vıvojového systému Mosaic *)
+(* Jméno souboru : C:\TecoLibSrc\Syslib\SysLib_V50_20230202.mlb *)
+(* Knihovna : SysLib 5.0 *)
+(* Autor : Teco a.s. Kolin *)
+(* Autorská práva : (c) 2004-2023 Teco a.s. *)
+(* Verze IEC pøekladaèe : 4.2.18.0 *)
+(* Verze assembleru : 4.3.00 *)
+
+//{Knihovna : SysLib 5.0  }
+(* Historie: *)
+(*
+v1.0 01.09.2004 Nem úvodní verze knihovny
+v1.1 16.09.2004 Nem Pøidány funkce : memcpy(),
+                    SetSummerTime(), IsSummerTime(), SetWinterTime(), IsWinterTime()
+v1.2 16.05.2005 Nem Pøidány funkce GetDate(), GetTime(), GetDateTime(), GetRTC(), 
+                    SetRTC()
+                    Zmìna deklarace systémovıch promìnnıch na strukturu
+v1.3 10.11.2005 Nem Doplnìny funkce TecoDT_TO_DT() a DT_TO_TecoDT()
+v1.4 17.11.2007 Nem Doplnìna funkce Memset()
+v1.5 17.01.2008 Nem Doplnìna funkce IncreaseMaxCycleTime()
+                    Vynechány funkce nastavení analog. kanálu.
+v1.6 18.08.2008 Nem Prohozeno poøadí parametrù VAR_INPUT a VAR_IN_OUT
+                    u funkcí Memset() a Memcpy() kvùli pouití v LD,
+                    kde je problem s VAR_IN_OUT, pokud je prvni (na CR)
+v1.7 20.02.2009 Nem Doplnìny funkce Get_IP_address() a Set_IP_address() pro Eth1
+v1.8 10.03.2009 Nem Funkce Get_IP_address() nahrazena funkci GetIPaddress() a 
+                    pøesunuta do ComLib
+                    + sesouhlaseny parametry s funkcí GetRemoteIPaddress
+                    Funkce Set_IP_address() nahrazena funkci SetIPaddress() a 
+                    pøesunuta do ComLib
+v1.9 22.10.2009 Nem Doplnìny funkce CIBunitInfo() a SetCIBunitAddress()
+                    a datové typy TCIBunitState a TCIBunitInfo
+v2.0 20.11.2009 Nem Doplnìna funkce ProgramLock()
+v2.1 16.12.2009 Nem Doplnìn funkèní blok fbTick() a funkce Memcmp()
+v2.2 18.01.2010 Nem Opraveno kódování CIB masteru a doplnìn kód pro mastera 0 
+                    (MI0_CIB1 a MI0_CIB2)
+v2.3 06.05.2010 Nem Doplnìny funkce SetWebPSW() a VerifyWebPSW()
+v2.4 16.08.2010 Nem Doplnìny funkce SystemDisplayBacklightOn() a 
+                    SystemDisplayBacklightOff()
+v2.5 02.09.2010 Nem Doplnìny závislosti na knihovnách
+     15.09.2010 Nem Funkce SetRTC vrací informaci o tom, jestli se podaøilo zapsat 
+                    èas do RTC obvodu
+v2.6 19.01.2011 Nem Doplnìny funkce RFunitInfo() and SetRFunitAddress()
+                    Pokud je SW78 = 0 (starsi systemy) tak funkce GetDateTime()
+                    a GetTime() pouzivaji S5 (desitky milisekund) jinak se pouziva 
+                    SW78 (jednotky milisekund)
+v2.7 30.06.2011 Nem Doplnìn funkèní blok fbBondRFunit()
+v2.8 02.11.2011 Nem Doplnìny funkèní bloky memcpyEx(), memsetEx() a memcmpEx()
+v2.9 02.12.2011 Nem Doplnìny funkce SetWebMAC() a VerifyWebMAC()
+v3.0 27.04.2012 Nem Doplnìn funkèní blok TPR() a deklarace do struktury SystemS
+v3.1 21.06.2012 Nem Blok TPR nahrazen blokem fbTPR() - vstup RESET ma prednost
+                    Oprava deklarace struktury SystemS od %S57 dále
+                    (doplnìny CPU_DI a CPU_DO)
+v3.2 22.03.2013 Nem Doplnìn pùvodní blok TPR z verze 3.0 kvùli zpìtné kompatibilitì
+                    Doplnìna funkce ProgramIsChanged()
+v3.3 21.06.2013 Nem Opravena funkce ProgramIsChanged() v pøípadì on-line zmìny
+                    Doplnìny funkce ReInitPLC_hotRestart(), ReInitPLC_coldRestart()
+                    a ReInitPLC_noRestart() - pro Foxtrot je tøeba minimálnì FW v7.8
+v3.4 03.10.2014 Nem Doplnìna funkce GetModuleID() a typ T_RGB_COLOR
+v3.5 16.04.2015 Nem Doplnìna funkce MemcpyPtr()
+v3.6 14.12.2015 Nem Doplnìny funkce GetVarValueByName() a SetVarValueByName()
+v3.7 27.06.2016 Nem Doplnìna funkce GetVarNameByAdr()
+v3.8 21.11.2016 Nem Doplnìny funkce ReInitPLC_hotRestartX(), ReInitPLC_coldRestartX(),
+                    ReInitPLC_noRestartX() a funkèní blok fbIOSystemDiag - vyadují FW v9.9 nebo vyšší
+     07.09.2017 Nem Doplnìny funkce SetWebLevel() a VerifyWebLevel() 
+v3.9 01.06.2018 Nem Doplnìny funkèní bloky fbLoadRemFromFile() a fbSaveRemToFile()
+                    (pouze pro Foxtrot CP-2xxx)
+v4.0 04.12.2018 Nem Doplnìna funkce MemcpyPtr0()
+v4.1 10.07.2019 Nem Pro Foxtrot 2 doplnìny funkce CIBunitInfo2() a SetAddressCIBunit2()
+v4.2 17.10.2019 Nem Doplnìny poloky do TSYSTEM_S
+v4.3 19.12.2019 Nem Doplnìny funkce GetProgramInfo2(), GetPlcInfo2() a ResetLTE2()
+v4.4 02.03.2020 Nem Funkce SetWebPSW(), VerifyWebPSW(), SetWebMAC(), VerifyWebMAC(), 
+                    SetWebLevel() a VerifyWebLevel() upraveny pro Foxtrot CP-2xxx  
+v4.5 14.09.2020 Nem Doplnìna funkce: LoadNewPackage2() (pouze pro Foxtrot CP-2xxx)
+     30.04.2021 Nem Doplnìn funkèní blok fbStopwatch100us()
+     17.05.2021 Byd Oprava vyhodnocení nábìné hrany u blokù TPR a fbTPR
+v4.6 13.08.2021 Nem Doplnìny deklarace DISABLE_WEB_DEL_BUTTONS, USE_USER_LOGIN_PAGE, 
+                    ENABLE_WEB_CORS a ENABLE_API_CORS (pouze pro Foxtrot CP-2xxx)
+v4.7 16.09.2021 Nem Doplnìny funkce: GetVarAbsLoc() a GetVarAbsLocBool()
+v4.8 08.06.2022 Nem Doplnìny funkèní bloky fbSetConfigWebPsw2(), fbSetAvahiHostName2()
+                    a funkce GetAvahiHostName2()
+v4.9 19.12.2022 Nem Doplnìna funkce TestHotRestartFailed2() a funkèní blok fbFlashRem2()
+v5.0 02.02.2023 Byd Doplnìna funkce RandomU
+*)
+
+(*----------------------------------------------------------------------------*)
+
+TYPE T_RGB_COLOR :
+  STRUCT
+    red              : usint;  (*red color <0..255>*)
+    green            : usint;  (*green color <0..255>*)
+    blue             : usint;  (*blue color <0..255>*)
+    opacity          : usint;  (*opacity (0 = opaque, 255 = transparent)*)
+  END_STRUCT;
+END_TYPE
+
+TYPE TSYSTEM_S :
+  STRUCT
+    S0               : byte;  (*%S0 pøíznaky vısledkù aritmetickıch operací*)
+    S1               : byte;  (*%S1 pøíznaky vısledkù logickıch operací*)
+    S2_0             : bool;  (*%S2.0 rezervováno*)
+    S2_1             : bool;  (*%S2.1 rezervováno*)
+    S2_2             : bool;  (*%S2.2 PLC je v reimu RUN*)
+    S2_3             : bool;  (*%S2.3 teplı restart PLC*)
+    S2_4             : bool;  (*%S2.4 studenı restart PLC*)
+    OUTPUTS_ARE_ENABLED : bool;  (*%S2.5 vıstupy odblokovány*)
+    S2_6             : bool;  (*%S2.6 pøechod do run bez restartu PLC*)
+    CYCLE_TIME_WARNING : bool;  (*%S2.7 pøekroèena první mez doby cyklu (varování)*)
+    LAST_CYCLE_TIME_10MS : usint;  (*%S3 doba minulého cyklu v 10 ms*)
+    CYCLE_COUNTER    : usint;  (*%S4 èítaè cyklu*)
+    COUNTER_10MS     : usint;  (*%S5 èítaè desítek milisekund*)
+    COUNTER_SECONDS  : usint;  (*%S6 èítaè sekund systémového èasu*)
+    COUNTER_MINUTES  : usint;  (*%S7 èítaè minut systémového èasu*)
+    COUNTER_HOURS    : usint;  (*%S8 èítaè hodin systémového èasu*)
+    COUNTER_DAYS_OF_WEEK : usint;  (*%S9 èítaè dnù v tıdnu*)
+    COUNTER_DAYS_OF_MONTH : usint;  (*%S10 èítaè dnù v mìsíci*)
+    COUNTER_MONTHS   : usint;  (*%S11 Èítaè mesícù*)
+    COUNTER_YEARS    : usint;  (*%S12 Èítaè rokù*)
+    PERIOD_PULSE_100MS : bool;  (*%S13.0 pulz s periodou 100 ms*)
+    PERIOD_PULSE_500MS : bool;  (*%S13.1 pulz s periodou 500 ms*)
+    PERIOD_PULSE_1SEC : bool;  (*%S13.2 pulz s periodou 1 s*)
+    PERIOD_PULSE_10SEC : bool;  (*%S13.3 pulz s periodou 10 s*)
+    PERIOD_PULSE_1MIN : bool;  (*%S13.4 pulz s periodou 1 min*)
+    PERIOD_PULSE_10MIN : bool;  (*%S13.5 pulz s periodou 10 min*)
+    PERIOD_PULSE_1HOUR : bool;  (*%S13.6 pulz s periodou 1 hod*)
+    PERIOD_PULSE_1DAY : bool;  (*%S13.7 pulz s periodou 1 den*)
+    COUNTER_100MS    : uint;  (*%SW14 Èítaè v 100m*)
+    COUNTER_1SEC     : uint;  (*%SW16 Èítaè v 1s*)
+    COUNTER_10SEC    : uint;  (*%SW18 Èítaè v 10s*)
+    R_EDGE_100MS     : bool;  (*%S21.0 nábìná hrana 1x za 100 ms*)
+    R_EDGE_500MS     : bool;  (*%S21.1 nábìná hrana 1x za 500 ms*)
+    R_EDGE_1SEC      : bool;  (*%S21.2 nábìná hrana 1x za 1 s*)
+    R_EDGE_10SEC     : bool;  (*%S21.3 nábìná hrana 1x za 10 s*)
+    R_EDGE_1MIN      : bool;  (*%S21.4 nábìná hrana 1x za 1 min*)
+    R_EDGE_10MIN     : bool;  (*%S21.5 nábìná hrana 1x za 10 min*)
+    R_EDGE_1HOUR     : bool;  (*%S21.6 nábìná hrana 1x za 1 hod*)
+    R_EDGE_1DAY      : bool;  (*%S21.7 nábìná hrana 1x za 1 den*)
+    F_EDGE_100MS     : bool;  (*%S21.0 sestupná hrana 1x za 100 ms*)
+    F_EDGE_500MS     : bool;  (*%S21.1 sestupná hrana 1x za 500 ms*)
+    F_EDGE_1SEC      : bool;  (*%S21.2 sestupná hrana 1x za 1 s*)
+    F_EDGE_10SEC     : bool;  (*%S21.3 sestupná hrana 1x za 10 s*)
+    F_EDGE_1MIN      : bool;  (*%S21.4 sestupná hrana 1x za 1 min*)
+    F_EDGE_10MIN     : bool;  (*%S21.5 sestupná hrana 1x za 10 min*)
+    F_EDGE_1HOUR     : bool;  (*%S21.6 sestupná hrana 1x za 1 hod*)
+    F_EDGE_1DAY      : bool;  (*%S21.7 sestupná hrana 1x za 1 den*)
+    LAST_CYCLE_TIME_100US : uint;  (*%SW22 doba minulého cyklu v 100 µs*)
+    S24              : byte;  (*%S24 øídící masky procesù*)
+    S25              : byte;  (*%S25 øídící masky procesù*)
+    S26              : byte;  (*%S26 øídící masky procesù*)
+    S27              : byte;  (*%S27 øídící masky procesù*)
+    S28              : byte;  (*%S28 øídící masky procesù*)
+    S29              : byte;  (*%S29 øídící masky procesù*)
+    SL30             : udint;  (*%SL30 rezervováno*)
+    S34              : byte;  (*%S34 hlavní kód chyby PLC*)
+    BAT_ERR          : bool;  (*%S35.0 chyba zálohovací baterie*)
+    S35_1            : bool;  (*%S35.1 rezervováno*)
+    S35_2            : bool;  (*%S35.2 stav tlaèítka MODE*)
+    S35_3            : bool;  (*%S35.3 stav tlaèítka SET*)
+    S35_4            : bool;  (*%S35.4 rezervováno*)
+    S35_5            : bool;  (*%S35.5 rezervováno*)
+    IS_SUMMER_TIME   : bool;  (*%S35.6 indikace letního èasu*)
+    SUMMER_TIME_REQUEST : bool;  (*%S35.7 ádost o automatickı pøechod na letni cas (pouze Foxtrot 1)*)
+    CPU_TEMPERATURE  : usint;  (*%S36  teplota procesorového modulu [stupnì C]*)
+    MOSAIC_IS_CONNECTED : bool;  (*%S37.0 Mosaic komunikuje s PLC*)
+    S37_1            : bool;  (*%S37.1 rezervováno*)
+    S37_2            : bool;  (*%S37.2 rezervováno*)
+    IO_IS_FIXED      : bool;  (*%S37.3 pøíznak fixace I/O*)
+    S37_4            : bool;  (*%S37.4 rezervováno*)
+    USB_DISK_READY   : bool;  (*%S37.5 USB Flash Disk je pøipraven k pouití (pouze pro Foxtrot 2 nebo TC800)*)
+    IS_USB_DISK      : bool;  (*%S37.6 USB Flash Disk je zasunut do konektoru USB1 (pouze pro Foxtrot 2 nebo TC800)*)
+    EEPROM_IS_ON     : bool;  (*%S37.7 *)
+    S38              : byte;  (*%S38 verze uivatelského programu PLC*)
+    S39              : byte;  (*%S39 verze uivatelského programu PLC*)
+    S40              : byte;  (*%S40 verze systémového programu centrální jednotky*)
+    S41              : byte;  (*%S41 verze systémového programu centrální jednotky*)
+    S42              : byte;  (*%S42 øada PLC  (C=16#43, G=16#47, K=16#4B, L=16#4C, I=16#49)*)
+    S43              : byte;  (*%S43 pøíznaky chování PLC*)
+    S44              : byte;  (*%S44 znaèka pøekladaèe*)
+    S45              : byte;  (*%S45 znaèka pøekladaèe*)
+    S46              : byte;  (*%S46 mez pro varování doby cyklu  [10ms]*)
+    S47              : byte;  (*%S47 mez pro maximální dobu cyklu  [10ms]*)
+    SW48             : word;  (*%SW48 specifikace chyby PLC*)
+    S50              : byte;  (*%S50 kód chyby PLC*)
+    S51              : byte;  (*%S51 hlavní kód chyby PLC*)
+    COUNTER_1MS      : udint;  (*%SL52 Èítaè po 1 ms*)
+    SW56             : word;  (*%SW56 rezerva*)
+    CPU_DI           : byte;  (*%S58 vstupy obsluhované centrální jednotkou*)
+    CPU_DO           : byte;  (*%S59 vıstupy obsluhované centrální jednotkou*)
+    SL60             : udint;  (*%SL70 rezerva*)
+    SIZE_OF_RETAIN_ZONE : udint;  (*%SL64 velikost remanentní zóny (poèet bytù)*)
+    UTC_OFFSET       : int;  (*%SW68 offset proti UTC*)
+    CRC_OF_USER_PROGRAM : word;  (*%SW70 CRC uivatelského programu*)
+    CRC_OF_HEADER_PROGRAM : word;  (*%SW72 CRC hlavièky uivatelského programu*)
+    S74              : byte;  (*%S74 rezervováno*)
+    S75              : byte;  (*%S75 rezervováno*)
+    S76              : byte;  (*%S76 rezervováno*)
+    S77              : byte;  (*%S77 rezervováno*)
+    COUNTER_MILLISECONDS : uint;  (*%SW78 desetinná èást systémového èasu [ms]*)
+    PLC_PRIVATE_AREA : ARRAY [0..19] OF byte;  (*%S80,...,%S99 privátní zóna centrální jednotky PLC*)
+  END_STRUCT;
+END_TYPE
+
+VAR_GLOBAL
+ System_S AT %S0 : TSYSTEM_S;
+ IS_HOT_RESTART_PLC AT System_S.S2_3 : bool;  (*%S2.3 teplı restart PLC*)
+ IS_COLD_RESTART_PLC AT System_S.S2_4 : bool;  (*%S2.4 studenı restart PLC*)
+ IS_RESTART_PLC AT System_S.S2_6 : bool;  (*%S2.6 prechod do run bez restartu PLC*)
+ CRC_OF_APLIC_PROGRAM AT System_S.CRC_OF_USER_PROGRAM : dword;  (*%SL70 CRC aplikaèního programu*)
+ DISABLE_WEB_DEL_BUTTONS AT %S355.0 : bool;  (*%S355.0 potlaèit tlaèítka DEL v seznamu souborù*)
+ USE_USER_LOGIN_PAGE AT %S355.1 : bool;  (*%S355.1 pro pøihlášení pouít uivatelkou web stránku místo systémové*)
+ ENABLE_WEB_CORS AT %S355.2 : bool;  (*%S355.2 povolit CORS pro web server*)
+ ENABLE_API_CORS AT %S355.3 : bool;  (*%S355.3 povolit CORS pro TecoApi*)
+
+END_VAR
+
+TYPE TModuleInfo :
+  STRUCT
+    ECOM             : bool;  (*1 = chyba komunikace mezi CPU a I/O modulem*)
+    DATA             : bool;  (*1 = data poskytovaná modulem jsou platná*)
+    DUMMY1           : bool;  (*nepouzito*)
+    DUMMY2           : bool;  (*nepouzito*)
+    ERR              : bool;  (*1 = chyba I/O modulu*)
+    DEC              : bool;  (*1 = modul má platnou deklaraci v programu PLC*)
+    OTH              : bool;  (*1 = typ I/O modulu neodpovídá deklaraci v programu PLC*)
+    POS              : bool;  (*1 = modul je pøítomen v dané pozici*)
+    STAT             : usint;  (*status modulu – vıše uvedené promìnné jako 1 byte (ECOM = STAT.0, … , POS = STAT.7)*)
+  END_STRUCT;
+END_TYPE
+
+TYPE TIOSystemInfo :
+  STRUCT
+    err              : bool;  (*0 = I/O systém PLC je bez chyby, 1 = v I/O systému PLC je nìjakı problém*)
+    rackNumber       : usint;  (*pøi err = 1 udává èíslo rámu PLC, kde je umístìn modul signalizující nìjakı problém*)
+    position         : usint;  (*pøi err = 1 udává èíslo pozice v rámu PLC, kde je umístìn modul signalizující nìjakı problém*)
+  END_STRUCT;
+END_TYPE
+
+VAR_GLOBAL CONSTANT
+ MODULE_AND_DATA_OK : usint := 16#A2;
+
+END_VAR
+
+__DECL FUNCTION ModuleInfo : TModuleInfo
+(*Informace o I/O modulu (pouze pro Foxtrot 1)
+   Funkce vrátí informace o aktuálním stavu jednoho I/O modulu.
+   Funkce je urèena pro kontrolu I/O modulù vyndavanıch za chodu*)
+  VAR_INPUT
+    rackNumber       : usint;  (*èíslo rámu, kde je umístìn I/O modul*)
+    position         : usint;  (*èíslo pozice v rámu, kde je umístìn I/O modul*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ModuleInfo2 : TModuleInfo
+(*Informace o I/O modulu (pouze pro Foxtrot 2 nebo TC800)
+   Funkce vrátí informace o aktuálním stavu jednoho I/O modulu.
+   Funkce je urèena pro kontrolu I/O modulù vyndavanıch za chodu*)
+  VAR_INPUT
+    Bus_ID           : udint;  (*identifikátor sbìrnice (TCL2 = 16#1020, ...)*)
+    Unit_ID          : usint;  (*adresa jednotky na sbernici (0,...,63)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION IOSystemInfo : TIOSystemInfo
+(*Informace o stavu I/O systému na TCL2 sbìrnici (pouze pro Foxtrot 1)
+
+   Funkce vrátí celkovou informaci o stavu I/O systému PLC
+   Funkce je urèena pro kontrolu I/O modulù vyndavanıch za chodu
+   
+   Pokud se na TCL2 sbìrnici vyskytne nìjakı problém
+   (napø. chybí I/O modul poadovanı v HW konfiguraci),
+   nastaví se vıstup err na TRUE,
+   vıstupní promìnná rackNumber udává èíslo rámu
+   a promìnná position øíká pozici v rámu, na které se našel problém*)
+END_FUNCTION
+
+__DECL FUNCTION Memcpy : uint
+(*Kopírovat pamì
+  Funkce Memcpy zkopíruje blok pamìti ze source do dest
+  Funkce vrací poèet zkopírovanıch bytù*)
+  VAR_INPUT
+    length           : uint;  (*Délka kopírovaného bloku v bytech*)
+  END_VAR
+  VAR_IN_OUT
+    source           : usint;  (*Zdroj odkud kopírovat*)
+    dest             : usint;  (*Cíl kam kopírovat*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION MemcpyEx : uint
+(*Kopírovat pamì
+  Funkce Memcpy zkopíruje blok pamìti ze source+offsetSource do dest+offsetDest
+  Funkce vrací poèet zkopírovanıch bytù*)
+  VAR_INPUT
+    length           : udint;  (*Délka kopírovaného bloku v bytech*)
+    offSource        : udint;  (*Posunutí od zaèátku zdroje*)
+    offDest          : udint;  (*Posunutí od zaèátku cíle*)
+  END_VAR
+  VAR_IN_OUT
+    source           : usint;  (*Zdroj odkud kopírovat*)
+    dest             : usint;  (*Cíl kam kopírovat*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION MemcpyPtr : udint
+(*Funkce MemcpyPtr kopíruje blok n bytù ze source do dest.
+  Funkce vrací poèet zkopírovanıch bytù*)
+  VAR_INPUT
+    source           : PTR_TO usint;  (*pointer to source*)
+    dest             : PTR_TO usint;  (*pointer to  destination*)
+    length           : udint;  (*number of bytes*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION MemcpyPtr0 : udint
+(*Funkce MemcpyPtr0 kopíruje blok n bytù ze source do dest.
+  Funkce vrací poèet zkopírovanıch bytù. Za konec zkopírovaného bloku
+  se zapíše jeden byte s hodnotou binární nula (konec øetezce).*)
+  VAR_INPUT
+    source           : PTR_TO usint;  (*pointer to source*)
+    dest             : PTR_TO usint;  (*pointer to  destination*)
+    length           : udint;  (*number of bytes*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION Memset : bool
+(*Naplnit pamì
+  Funkce Memset vyplní blok pamìti zadanou hodnotou
+  Funkce vrací TRUE, paklie se podaøí naplnit blok pamìti*)
+  VAR_INPUT
+    val              : udint;  (*Hodnota, která se zapíše do bloku pamìti*)
+    length           : uint;  (*Délka bloku pamìti v bytech*)
+  END_VAR
+  VAR_IN_OUT
+    dest             : usint;  (*Cíl, kterı bude naplnìn konstantou*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION MemsetEx : bool
+(*Naplnit pamì
+  Funkce Memset vyplní blok pamìti zadanou hodnotou. Adresa bloku je dest+offDest.
+  Funkce vrací TRUE, paklie se podaøí naplnit blok pamìti*)
+  VAR_INPUT
+    val              : udint;  (*Hodnota, která se zapíše do bloku pamìti*)
+    length           : udint;  (*Délka bloku pamìti v bytech*)
+    offDest          : udint;  (*Posunutí od zaèátku cíle*)
+  END_VAR
+  VAR_IN_OUT
+    dest             : usint;  (*Cíl, kterı bude naplnìn konstantou*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION Memcmp : bool
+(*Porovnání bloku pamìti
+  Funkce Memcmp porovná vzájemnì dva bloky pamìti
+  Funkce vrací TRUE pokud jsou bloky pamìti shodné*)
+  VAR_INPUT
+    length           : uint;  (*Délka porovnávaného bloku v bytech*)
+  END_VAR
+  VAR_IN_OUT
+    in1              : usint;  (*První porovnávanı blok*)
+    in2              : usint;  (*Druhı porovnávanı blok*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION MemcmpEx : bool
+(*Porovnání bloku pamìti
+  Funkce Memcmp porovná vzájemnì dva bloky pamìti.
+  Adresy blokù jsou in1+offIn1 a in2+offIn2.
+  Funkce vrací TRUE pokud jsou bloky pamìti shodné*)
+  VAR_INPUT
+    length           : udint;  (*Délka porovnávaného bloku v bytech*)
+    offIn1           : udint;  (*Posunutí prvního porovnávaného bloku*)
+    offIn2           : udint;  (*Posunutí druhého porovnávaného bloku*)
+  END_VAR
+  VAR_IN_OUT
+    in1              : usint;  (*První porovnávanı blok*)
+    in2              : usint;  (*Druhı porovnávanı blok*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION IncreaseMaxCycleTime : bool
+(*Zvıšit èas pro dobu cyklu PLC
+
+   Funkce zvıší jednorázovì hlídanou dobu cyklu PLC*)
+  VAR_INPUT
+    addTime          : uint;  (*o kolik milisekund se má zvıšit hlídaná doba cyklu*)
+  END_VAR
+END_FUNCTION
+
+TYPE TTecoDateTime :
+  STRUCT
+    year             : usint;  (*rok     (poslední dvì èíslice letopoètu)*)
+    month            : usint;  (*mìsíc   (1 .. 12)*)
+    day              : usint;  (*den     (1 .. 28/29/30/31)*)
+    hour             : usint;  (*hodina  (0 .. 23)*)
+    min              : usint;  (*minuta  (0 .. 59)*)
+    sec              : usint;  (*sekunda (0 .. 59)*)
+    dayOfWeek        : usint;  (*den v tıdnu (1 = pondìlí, 7 = nedìle)*)
+    milisec          : uint;  (*milisekunda*)
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION SetSummerTime : bool
+(*Nastavit automatickı pøechod na letní èas
+  Funkce nastaví poadavek na automatickı pøechod mezi letním a zimním èasem*)
+END_FUNCTION
+
+__DECL FUNCTION IsSummerTime : bool
+(*Test letního èasu
+  Funkce otestuje je-li aktuálnì nastaven letní èas*)
+END_FUNCTION
+
+__DECL FUNCTION SetWinterTime : bool
+(*Vypnout automatickı pøechod na letní èas
+  Funkce vypne poadavek na automatickı pøechod mezi letním a zimním èasem*)
+END_FUNCTION
+
+__DECL FUNCTION IsWinterTime : bool
+(*Test zimního èasu
+  Funkce otestuje je-li aktuálnì nastaven zimní èas*)
+END_FUNCTION
+
+__DECL FUNCTION GetDate : date
+(*Naèíst aktuální datum*)
+  VAR
+    tmp              : TTecoDateTime;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION GetTime : time
+(*Naèíst aktuální èas PLC*)
+  VAR
+    milisec          : uint;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION GetDateTime : dt
+(*Naèíst aktuální datum a èas PLC*)
+  VAR
+    tmp              : TTecoDateTime;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION GetRTC : dt
+(*Naèíst datum a èas pøímo z RTC obvodu v PLC*)
+  VAR
+    tmp              : TTecoDateTime;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetRTC : bool
+(*Nastavit novı èas a datum PLC
+  Funkce nastaví novı datum a èas do RTC obvodu v PLC*)
+  VAR_INPUT
+    PDT              : dt;  (*novı datum a èas*)
+  END_VAR
+  VAR
+    tmp              : TTecoDateTime;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION TecoDT_TO_DT : dt
+(*Pøevod datumu a èasu ze struktury TTecoDateTime do IEC formátu DATE_AND_TIME*)
+  VAR_INPUT
+    Teco_DT          : TTecoDateTime;  (*datum a èas*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION DT_TO_TecoDT : TTecoDateTime
+(*Pøevod datumu a èasu z IEC formátu DATE_AND_TIME do struktury TTecoDateTime*)
+  VAR_INPUT
+    IEC_DT           : dt;  (*datum a èas*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION memory_for_ProgramIsChanged {HIDDEN} : bool
+  VAR_INPUT
+    saveSL70         : bool;
+    memSL70          : udint;
+    memS4            : usint;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ProgramIsChanged : bool
+(*Funkce vrací TRUE pøi restartu programu a pøi on-line zmìnì programu*)
+  VAR
+    saveSL70         : bool;
+    memSL70          : udint;
+    memS4            : usint;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ReInitPLC_hotRestart : bool
+(*Funkce pro reinicializaci PLC
+  PLC nejprve pøejde do reimu HALT a vıstupy PLC budou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Poté se provede teplı restart a PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Hodnoty RETAIN promìnnıch zùstanou zachovány,
+  ostatní promìnné se nastaví na inicializaèní hodnotu*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ReInitPLC_coldRestart : bool
+(*Funkce pro reinicializaci PLC
+  PLC nejprve pøejde do reimu HALT a vıstupy PLC budou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Poté se provede studenı restart a PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Do všech promìnnıch se nastaví inicializaèní hodnoty*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ReInitPLC_noRestart : bool
+(*Funkce pro reinicializaci PLC
+  PLC nejprve pøejde do reimu HALT a vıstupy PLC budou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Poté PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Hodnoty promìnnıch zùstanou beze zmìny*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ReInitPLC_hotRestartX : bool
+(*Funkce pro reinicializaci PLC s naètením nového programu ze souboru
+  Funkce nejprve ovìøí, e existují soubory jejich jména
+  jsou uvedena v parametrech code a table. V kladném
+  pøípadì funkce vrátí TRUE a PLC dokonèí právì provádìnı
+  cykl programu. Poté pøejde PLC do reimu HALT
+  a vıstupy PLC jsou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Pak se provede naètení nového kódu programu ze souboru (vèetnì tabulek)
+  a PLC provede všechny potøebné kontroly nového kódu. Kdy kontroly
+  odhalí nìjakı problém, PLC naète zpìt pùvodní kód z pamìti EEPROM.
+  Pokud je kód v poøádku a je nastaven vstup eeprom := TRUE
+  tak se naètenı kód naprogramuje do pamìti EEPROM.
+  Poté se provede teplı restart a PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Hodnoty RETAIN promìnnıch zùstanou zachovány,
+  ostatní promìnné se nastaví na inicializaèní hodnotu*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+    eeprom           : bool;  (*1 = naprogramovat novı kód do EEPROM*)
+    code             : string [80];  (*jméno souboru s kódem programu (vèetnì cesty)*)
+    table            : string [80];  (*jméno souboru s tabulkami programu (vèetnì cesty)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ReInitPLC_coldRestartX : bool
+(*Funkce pro reinicializaci PLC s naètením nového programu ze souboru
+  Funkce nejprve ovìøí, e existují soubory jejich jména
+  jsou uvedena v parametrech code a table. V kladném
+  pøípadì funkce vrátí TRUE a PLC dokonèí právì provádìnı
+  cykl programu. Poté pøejde PLC do reimu HALT
+  a vıstupy PLC jsou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Pak se provede naètení nového kódu programu ze souboru (vèetnì tabulek)
+  a PLC provede všechny potøebné kontroly nového kódu. Kdy kontroly
+  odhalí nìjakı problém, PLC naète zpìt pùvodní kód z pamìti EEPROM.
+  Pokud je kód v poøádku a je nastaven vstup eeprom := TRUE
+  tak se naètenı kód naprogramuje do pamìti EEPROM.
+  Poté se provede studenı restart a PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Do všech promìnnıch se nastaví inicializaèní hodnoty*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+    eeprom           : bool;  (*1 = naprogramovat novı kód do EEPROM*)
+    code             : string [80];  (*jméno souboru s kódem programu (vèetnì cesty)*)
+    table            : string [80];  (*jméno souboru s tabulkami programu (vèetnì cesty)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION ReInitPLC_noRestartX : bool
+(*Funkce pro reinicializaci PLC s naètením nového programu ze souboru
+  Funkce nejprve ovìøí, e existují soubory jejich jména
+  jsou uvedena v parametrech code a table. V kladném
+  pøípadì funkce vrátí TRUE a PLC dokonèí právì provádìnı
+  cykl programu. Poté pøejde PLC do reimu HALT
+  a vıstupy PLC jsou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Pak se provede naètení nového kódu programu ze souboru (vèetnì tabulek)
+  a PLC provede všechny potøebné kontroly nového kódu. Kdy kontroly
+  odhalí nìjakı problém, PLC naète zpìt pùvodní kód z pamìti EEPROM.
+  Pokud je kód v poøádku a je nastaven vstup eeprom := TRUE
+  tak se naètenı kód naprogramuje do pamìti EEPROM.
+  Poté PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Hodnoty promìnnıch zùstanou beze zmìny*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+    eeprom           : bool;  (*1 = naprogramovat novı kód do EEPROM*)
+    code             : string [80];  (*jméno souboru s kódem programu (vèetnì cesty)*)
+    table            : string [80];  (*jméno souboru s tabulkami programu (vèetnì cesty)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION TestHotRestartFailed2 : bool
+END_FUNCTION
+
+__DECL FUNCTION GetModuleID : string [40]
+(*Vrátí identifikacní retezec 32 a 36 znaku dle typu modulu (pouze pro Foxtrot 1)*)
+  VAR_INPUT
+    rackNumber       : usint;  (*císlo rámu, kde je umísten I/O modul*)
+    position         : usint;  (*císlo pozice v rámu, kde je umísten I/O modul*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION GetVarValueByName : string [255]
+(*Vrátí hodnotu promìnné podle zadaného jména promìnné*)
+  VAR_INPUT
+    varName          : string [255];  (*úplné jméno promìnné (jméno instance)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION GetVarNameByAdr : string [255]
+(*Vrátí jméno promìnné podle adresy promìnné*)
+  VAR_IN_OUT
+    varAdr           : byte;  (*jméno promìnné (jméno instance)*)
+  END_VAR
+  VAR_INPUT
+    varSize          : udint;  (*velikost promìnné (poèet bytù)*)
+  END_VAR
+END_FUNCTION
+
+TYPE T_VAR_DESC :
+  STRUCT
+    addr             : udint;
+    size             : udint;
+    typ              : usint;
+    isArray          : bool;
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION GetVarDescByName : T_VAR_DESC
+(*Vrátí popis promìnné podle zadaného jména promìnné*)
+  VAR_INPUT
+    varName          : string [255];  (*úplné jméno promìnné (jméno instance)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetVarValueByName : bool
+(*Nastaví hodnotu promìnné podle zadaného jména promìnné*)
+  VAR_INPUT
+    varName          : string [255];  (*úplné jméno promìnné (jméno instance)*)
+    varValue         : string [255];  (*nová hodnota promìnné*)
+  END_VAR
+END_FUNCTION
+
+TYPE TProgramInfo2 :
+  STRUCT
+    progName         : string [32];  (*user program name*)
+    progVersion      : string [16];  (*version of program*)
+    compiled         : string [32];  (*date of compilation*)
+    stamp            : dword;  (*CRC stamp*)
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION GetProgramInfo2 : TProgramInfo2
+(*Informace o uivatelském programu (pouze pro Foxtrot 2 nebo TC800)*)
+END_FUNCTION
+
+TYPE TPlcInfo2 :
+  STRUCT
+    family           : string [4];  (*family of PLC*)
+    plcType          : string [16];  (*PLC type*)
+    specif           : string [12];  (*specification*)
+    version          : string [12];  (*PLC version*)
+    serialNum        : string [8];  (*PLC serial number*)
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION GetPlcInfo2 : TPlcInfo2
+(*Informace o PLC systému (pouze pro Foxtrot 2 nebo TC800)*)
+END_FUNCTION
+
+__DECL FUNCTION ResetLTE2 : bool
+(*Reset LTE modemu (pouze pro Foxtrot 2)*)
+END_FUNCTION
+
+__DECL FUNCTION LoadNewPackage2 : bool
+(*Restart PLC s naètením nového programu
+  PLC nejprve pøejde do reimu HALT a vıstupy PLC budou zablokovány.
+  Provádìní programu (øízení technologie) se zastaví!
+  Poté se naète novı program PLC z balíèku (soubor vytvoøenı
+  prostøedím Mosaic a uloenı v souborovém systému PLC)
+  Pak PLC pøejde do reimu RUN.
+  Bìhem pøechodu do RUN dojde ke kompletní inicializaci IO systému.
+  Typ restartu je zvolen automaticky podle balíèku.*)
+  VAR_INPUT
+    rq               : bool;  (*1 = provést reinicializaci PLC*)
+    pckg             : string [80];  (*název balíèku s novım programem pro PLC*)
+  END_VAR
+END_FUNCTION
+
+TYPE T_VAR_ABS_LOC :
+  STRUCT
+    zone             : usint;  (*zone: 0=%X, 1=%Y, 2=%S, 3=%R*)
+    offset           : udint;  (*offset inside zone*)
+    inf              : string [15];  (*string info (for example '%R356')*)
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION GetVarAbsLoc : T_VAR_ABS_LOC
+(*Funkce vrací informace o absolutním umístìní promìnné (nelze pouít pro promìnné typu BOOL!)*)
+  VAR_INPUT
+    adrVar           : PTR_TO usint;  (*pointer to variable*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION GetVarAbsLocBool : T_VAR_ABS_LOC
+(*Funkce vrací informace o absolutním umístìní promìnné typu BOOL (lze pouít pouze pro promìnné typu BOOL!)*)
+  VAR_INPUT
+    adrVar           : PTR_TO bool;  (*pointer to BOOL variable*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION RandomU : real
+(*Vrací psedonáhodné èíslo v rozsahu 0 a 1. Vıstup je dán hodnotou "seed", která urèuje polohu v psedonáhodné øadì èísel.
+  Pøi kadém volání je hodnota seed aktualizována.
+  V pøípadì, e je nastaven vstup "init", je hodnota "seed" inicializována podle aktuálního data a èasu.
+  Funkce je implementována na základì algoritmu R4_UNIFORM_01 jeho autorem je John Burkardt.*)
+  VAR_INPUT
+    init             : bool;  (*Inicializovat seed podle data a èasu*)
+  END_VAR
+  VAR_IN_OUT
+    seed             : dint;  (*Hodnota urèující polohu v psedonáhodné øadì èísel*)
+  END_VAR
+END_FUNCTION
+
+VAR_GLOBAL CONSTANT
+ MI_CIB1 : usint := 1;  (*interní CIB sbìrnice systému Foxtrot*)
+ MI_CIB2 : usint := 2;
+ MI0_CIB1 : usint := 3;  (*externí CIB master, adresa 0, CIB linka 1*)
+ MI0_CIB2 : usint := 4;  (*externí CIB master, adresa 0, CIB linka 2*)
+ MI2_CIB1 : usint := 5;  (*externí CIB master, adresa 2, CIB linka 1*)
+ MI2_CIB2 : usint := 6;  (*externí CIB master, adresa 2, CIB linka 2*)
+ MI4_CIB1 : usint := 7;  (*externí CIB master, adresa 4, CIB linka 1*)
+ MI4_CIB2 : usint := 8;  (*externí CIB master, adresa 4, CIB linka 2*)
+ MI6_CIB1 : usint := 9;  (*externí CIB master, adresa 6, CIB linka 1*)
+ MI6_CIB2 : usint := 10;  (*externí CIB master, adresa 6, CIB linka 2*)
+ MI_RF : usint := 100;  (*interní RF sbìrnice systému Foxtrot*)
+ RF0_RF : usint := 101;  (*externí RF master, adresa 0*)
+ RF2_RF : usint := 102;  (*externí RF master, adresa 2*)
+ RF4_RF : usint := 103;  (*externí RF master, adresa 4*)
+ RF6_RF : usint := 104;  (*externí RF master, adresa 6*)
+
+END_VAR
+
+TYPE TCIBunitState :
+  STRUCT
+    INI              : bool;  (*CIB jednotka je inicializovaná*)
+    COM              : bool;  (*komunikace s CIB jednotkou je bez závad*)
+    ADDR             : bool;  (*adresa CIB jednotky byla akceptovaná*)
+    DUMMY3 {HIDDEN}  : bool;
+    REI              : bool;  (*pøíznak reinicializace CIB jednotky*)
+    DUMMY5 {HIDDEN}  : bool;
+    ALT              : bool;  (*zmìna tohoto bitu signalizuje nová data (pouze pro Foxtrot 2)*)
+    NET              : bool;  (*CIB jednotka je definovaná v programu a obsluhovaná centrální jednotkou*)
+  END_STRUCT;
+END_TYPE
+
+TYPE TCIBunitInfo :
+  STRUCT
+    line_defined     : bool;  (*CIB linka je definovaná v HW konfiguraci PLC*)
+    unit_defined     : bool;  (*CIB jednotka je definovaná v HW konfiguraci PLC*)
+    state            : TCIBunitState;  (*stav CIB jednotky (viz Typ TCIBunitState)*)
+    address          : word;  (*aktuálnì nastavená HW adresa CIB jednotky*)
+    code             : word;  (*kód CIB jednotky*)
+    unit_type        : string [17];  (*typové oznaèení CIB jednotky*)
+    description      : string [31];  (*popis CIB jednotky*)
+  END_STRUCT;
+END_TYPE
+
+TYPE TRFunitState :
+  STRUCT
+    INI              : bool;  (*RF jednotka je inicializovaná*)
+    COM              : bool;  (*komunikace s RF jednotkou je bez závad*)
+    DUMMY2 {HIDDEN}  : bool;
+    DUMMY3 {HIDDEN}  : bool;
+    DUMMY4 {HIDDEN}  : bool;
+    SLP              : bool;  (*RF jednotka muze prechazet do sleep rezimu*)
+    BND              : bool;  (*jednotka je spárovaná*)
+    NET              : bool;  (*RF jednotka je definovaná v programu a obsluhovaná centrální jednotkou*)
+  END_STRUCT;
+END_TYPE
+
+TYPE TRFunitInfo :
+  STRUCT
+    line_defined     : bool;  (*RF linka je definovaná v HW konfiguraci PLC*)
+    unit_defined     : bool;  (*RF jednotka je definovaná v HW konfiguraci PLC*)
+    state            : TRFunitState;  (*stav RF jednotky (viz Typ TRFunitState)*)
+    address          : word;  (*aktuálnì nastavená HW adresa RF jednotky*)
+    code             : word;  (*kód RF jednotky*)
+    unit_type        : string [17];  (*typové oznaèení RF jednotky*)
+    description      : string [31];  (*popis RF jednotky*)
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION CIBunitInfo : bool
+(*Informace o stavu CIB jednotky (pouze pro Foxtrot 1)
+
+  Funkce získá informace o aktuálním stavu jedné jednotky na CIB sbìrnici
+  Funkce vrací hodnotu TRUE, pokud se podaøí informace o CIB jednotce získat*)
+  VAR_INPUT
+    CIB_line         : usint;  (*èíslo CIB linky (viz konstanty MI_CIB1 a MI6_CIB2)*)
+    CIB_unitID       : usint;  (*èíslo pozice CIB jednotky (1,...,32)*)
+  END_VAR
+  VAR_IN_OUT
+    unitInfo         : TCIBunitInfo;  (*promìnná, do které jsou uloeny získané informace o CIB jednotce*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION CIBunitInfo2 : bool
+(*Informace o stavu CIB jednotky (pouze pro Foxtrot 2)
+
+  Funkce získá informace o aktuálním stavu jedné jednotky na CIB sbìrnici
+  Funkce vrací hodnotu TRUE, pokud se podaøí informace o CIB jednotce získat*)
+  VAR_INPUT
+    Bus_ID           : udint;  (*identifikátor sbìrnice*)
+    CIB_unitID       : usint;  (*logická adresa CIB jednotky (0,...,31)*)
+  END_VAR
+  VAR_IN_OUT
+    unitInfo         : TCIBunitInfo;  (*promìnná, do které jsou uloeny získané informace o CIB jednotce*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION RFunitInfo : bool
+(*Informace o stavu RF jednotky  (pouze pro Foxtrot 1)
+
+  Funkce získá informace o aktuálním stavu jedné RF jednotky
+  Funkce vrací hodnotu TRUE, pokud se podaøí informace o RF jednotce získat*)
+  VAR_INPUT
+    RF_line          : usint;  (*èíslo RF linky (viz konstanty MI_RF, RF0_RF,...,RF6_RF)*)
+    RF_unitID        : usint;  (*èíslo pozice RF jednotky (1,...,64)*)
+  END_VAR
+  VAR_IN_OUT
+    unitInfo         : TRFunitInfo;  (*promìnná, do které jsou uloeny získané informace o RF jednotce*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetAddressCIBunit : bool
+(*Nastavit novou HW adresu CIB jednotky (pouze pro Foxtrot 1)
+  Funkce nastaví novou HW adresu CIB jednotky
+  Funkce vrací hodnotu TRUE, pokud se podaøí adresu CIB jednotky nastavit*)
+  VAR_INPUT
+    CIB_line         : usint;  (*èíslo CIB linky (viz konstanty MI_CIB1 a MI6_CIB2)*)
+    CIB_unitID       : usint;  (*èíslo pozice CIB jednotky (1,...,32)*)
+    CIB_addr         : word;  (*nová HW adresa CIB jednotky*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetAddressCIBunit2 : bool
+(*Nastavit novou HW adresu CIB jednotky (pouze pro Foxtrot 2)
+  Funkce nastaví novou HW adresu CIB jednotky
+  Funkce vrací hodnotu TRUE, pokud se podaøí adresu CIB jednotky nastavit*)
+  VAR_INPUT
+    Bus_ID           : udint;  (*identifikátor sbìrnice*)
+    CIB_unitID       : usint;  (*logická adresa CIB jednotky (0,...,31)*)
+    CIB_addr         : word;  (*nová HW adresa CIB jednotky*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetAddressRFunit : bool
+(*Nastavit novou HW adresu RF jednotky (pouze pro Foxtrot 1)
+  Funkce nastaví novou HW adresu RF jednotky
+  Funkce vrací hodnotu TRUE, pokud se podaøí adresu RF jednotky nastavit*)
+  VAR_INPUT
+    RF_line          : usint;  (*èíslo RF linky (viz konstanty MI_RF, RF0_RF,...,RF6_RF)*)
+    RF_unitID        : usint;  (*èíslo pozice RF jednotky (1,...,64)*)
+    RF_addr          : word;  (*nová HW adresa RF jednotky*)
+  END_VAR
+END_FUNCTION
+
+TYPE TBondStat {HIDDEN} :
+  STRUCT  (*status bondovani*)
+    disconnect       : bool;  (*probiha odbondovani*)
+    connect          : bool;  (*probiha bondovani*)
+    bondMap          : bool;  (*probiha cteni bondovaci mapy*)
+    dummy3           : bool;
+    dummy4           : bool;
+    error            : bool;  (*doslo k chybe*)
+    done             : bool;  (*hotovo*)
+    busy             : bool;  (*master zaneprazdnen*)
+  END_STRUCT;
+END_TYPE
+
+TYPE TBondInfo {HIDDEN} :
+  STRUCT  (*informace, kterou vraci instrukce SYS 79*)
+    bondStat         : TBondStat;
+    bondID           : usint;  (*cislo pozice pribondovane jednotky (je-li bondovani uspesne)*)
+    bondType         : word;  (*typ pribondovane jednotky (je-li bondovani uspesne)*)
+  END_STRUCT;
+END_TYPE
+
+__DECL FUNCTION_BLOCK fbBondRFunit
+(*Spárovat RF jednotku s RF masterem (pouze pro Foxtrot 1)
+  Funkèní blok spáruje RF jednotku s RF masterem.
+  Tato akce mùe nìjakou dobu trvat. Bìhem akce je nastavena promìnná busy.
+  Pokud se podaøí RF jednotku spárovat tak je vıstupní promìnná done nastavena na hodnotu TRUE
+  a promìnná unitType obsahuje øetìzec s typem a vırobním èíslem spárované RF jednotky.
+  V opaèném pøípadì je nastavena promìnná err a promìnná errID obsahuje kód chyby*)
+  VAR_INPUT
+    exec             : bool R_EDGE;  (*ádost o spárování = nábìná hrana zahájí akci*)
+    RF_line          : usint;  (*èíslo RF linky (viz konstanty MI_RF, RF0_RF,...,RF6_RF)*)
+    RF_unitID        : usint;  (*èíslo pozice RF jednotky (1,...,64)*)
+    bondRq           : bool;  (*0 = pouze zrušit párování, 1 = napárovat novou jednotku*)
+    useRouter        : bool;  (*1 = po napárování komunikovat s RF jednotkou pøes router*)
+  END_VAR
+  VAR_OUTPUT
+    done             : bool;  (*párování úspìšnì ukonèeno*)
+    busy             : bool;  (*probíhá párování*)
+    err              : bool;  (*párování ukonèeno s chybou*)
+    errID            : udint;  (*kód chyby*)
+    unitType         : string [40];  (*typ úspìšnì spárované jednotky*)
+  END_VAR
+  VAR
+    result           : TBondInfo;
+    timIN            : bool;
+    timPT            : time :=  T#2s;
+    tim              : TON;  (*odbondovat 2+2 s, pribondovat 12+2 s*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION ProgramLock : bool
+(*Uzamèení aplikaèního programu (pouze pro Foxtrot 1)
+  Funkce uzamkne uivatelskı program PLC tak,
+  e nelze provést jeho zpìtnı pøeklad v prostøedí Mosaic*)
+END_FUNCTION
+
+__DECL FUNCTION_BLOCK TPR
+(*Èasovaè TPR. Zastaralá verze! V novém projektu pouijte fbTPR.
+  (generuje pulz dané šíøky, pulz je mono ukonèit vstupem R)*)
+  VAR_INPUT
+    IN               : bool;  (*vstup èasovaèe*)
+    R                : bool;  (*reset èasovaèe*)
+    PT               : time;  (*pøedvolba èasovaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èasovaèe*)
+    ET               : time;  (*aktuální hodnota èasovaèe*)
+  END_VAR
+  VAR
+    IN_r_edge        : R_TRIG;
+    LT               : time;  (*last tick value ( 1ms resolution)*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbTPR
+(*Èasovaè fbTPR (generuje pulz dané šíøky, pulz je mono ukonèit vstupem R)*)
+  VAR_INPUT
+    IN               : bool;  (*vstup èasovaèe*)
+    R                : bool;  (*reset èasovaèe*)
+    PT               : time;  (*pøedvolba èasovaèe*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èasovaèe*)
+    ET               : time;  (*aktuální hodnota èasovaèe*)
+  END_VAR
+  VAR
+    IN_r_edge        : R_TRIG;
+    LT               : time;  (*last tick value ( 1ms resolution)*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbSaveRemToFile
+(*Na nábìnou hranu vstupu exec uloí obsah všech RETAIN promìnnıch do souboru.
+  Jméno souboru se pøedává jako vstupní parametr. Ukládání hodnot mùe trvat nìkolik cyklù PLC.
+  Bìhem ukládání je nastaven vıstup busy. Vıstup done je nastaven na dobu jednoho cyklu ve chvíli,
+  kdy jsou uloeny všechny promìnné. Pokud pøi ukládání došlo k chybì, tak je nastaven vıstup err,
+  vıstup errId obsahuje kód chyby a vıstup errTxt obsahuje popis chyby.
+  POZOR !!! Blok je moné pouít pouze pro centrální jednotky systému Foxtrot II*)
+  VAR_INPUT
+    exec             : bool R_EDGE;  (*uloit stav RETAIN promìnnıch do souboru*)
+    fileName         : string [80];  (*jméno souboru*)
+  END_VAR
+  VAR_OUTPUT
+    done             : bool;  (*hotovo*)
+    busy             : bool;  (*blok ještì pracuje*)
+    err              : bool;  (*došlo k chybì*)
+    errId            : int;  (*kód chyby*)
+    errTxt           : string [80];  (*popis chyby*)
+    percent          : real;  (*kolik procent je zpracováno*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbLoadRemFromFile
+(*Na nábìnou hranu vstupu exec naète obsah všech RETAIN promìnnıch ze souboru.
+  Jméno souboru se pøedává jako vstupní parametr, oèekává se soubor vytvoøenı funkèním blokem fbSaveRemToFile().
+  Bìhem naèítání je nastaven vıstup busy, naèítání mùe trvat nìkolik cyklù PLC.
+  Vıstup done je nastaven na dobu jednoho cyklu ve chvíli, kdy jsou naèteny všechny RETAIN promìnné.
+  Pokud pøi naèítání došlo k chybì, tak je nastaven vıstup err,
+  vıstup errId obsahuje kód chyby a vıstup errTxt obsahuje popis chyby.
+  POZOR !!! Blok je moné pouít pouze pro centrální jednotky systému Foxtrot II*)
+  VAR_INPUT
+    exec             : bool R_EDGE;  (*naèíst stav RETAIN promìnnıch ze souboru*)
+    fileName         : string [80];  (*jméno souboru*)
+  END_VAR
+  VAR_OUTPUT
+    done             : bool;  (*hotovo*)
+    busy             : bool;  (*blok ještì pracuje*)
+    err              : bool;  (*došlo k chybì*)
+    errId            : int;  (*kód chyby*)
+    errTxt           : string [80];  (*popis chyby*)
+    percent          : real;  (*kolik procent je zpracováno*)
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbSysLib_FifoDt10 {HIDDEN}
+(*FIFO memory: max. 10 items DATE_AND_TIME*)
+  VAR_INPUT
+    in               : dt;  (*DATE_AND_TIME*)
+    rd               : bool;  (*read*)
+    wr               : bool;  (*write*)
+    tst              : bool;  (*test (first out)*)
+    rst              : bool;  (*reset*)
+  END_VAR
+  VAR_OUTPUT
+    out              : dt;
+    empty            : bool :=  TRUE;
+    full             : bool;
+  END_VAR
+  VAR CONSTANT
+    n                : int :=  10;  (*number of stored elements in the fifo*)
+  END_VAR
+  VAR
+    fifo             : ARRAY [0..9] OF dt;
+    pr               : int;
+    pw               : int;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbFlashRem2
+(*Uloit stav RETAIN promìnnıch do souboru (pouze pro Foxtrot 2 nebo TC800)
+  Pokud je vstup rqFlash TRUE tak se nastaví poadavek na uloení RETAIN promìnnıch. K uloení dojde v následující otoèce cyklu PLC. Hodnoty promìnnıch jsou uloeny do souboru, ze kterého se pøi teplém restartu automaticky obnoví. Takto lze uloit RETAIN promìnné a 10x za poslední hodinu. Pøípadné další poadavky pak fbFlashRem2 ignoruje a do chvíle, kdy poèet zápisù RETAIN promìnnıch do souboru za poslední hodinu klesne pod 10.*)
+  VAR_INPUT
+    rqFlash          : bool;  (*poadavek na uloení RETAIN promìnnıch*)
+  END_VAR
+  VAR_OUTPUT
+    done             : bool;  (*hotovo, poadavek pøijat*)
+    busy             : bool;  (*pøíliš velká èetnost poadavkù (maximum je 10/hod)*)
+    err              : bool;  (*chyba (v programu nejsou ádné RETAIN promìnné)*)
+  END_VAR
+  VAR
+    FifoDt10         : fbSysLib_FifoDt10;
+    tmpDT            : dt;
+    stop             : bool;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbStopwatch100us
+(*Stopky.
+   Blok odmìøuje èas mezi dvìma voláními fbStopwatch100us. Mìøení se zahájí zavoláním bloku s parametrem start = 1. Další volání bloku s prametrem start = 0 vrátí èas, kterı ubìhl od prvního zavolání bloku. Blok vrací èas s pøesností 100 mikrosekund. Max hodnota je 4d 23h 18m 16s 729,6ms.*)
+  VAR_INPUT
+    start            : bool;  (*1= zahájit mìøení, 0= vrátit èas od zaèátku mìøení*)
+  END_VAR
+  VAR_OUTPUT
+    tim_100us        : udint;  (*èas ve stovkách mikrosekund*)
+    tim_ms           : real;  (*èas v milisekundách*)
+  END_VAR
+  VAR
+    startTim         : udint;
+    actTim           : udint;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION_BLOCK fbSetAvahiParam2
+(*Nastavit nové parametry pro slubu Avahi (pouze pro Foxtrot 2 nebo TC800, v2.2.053 nebo vyšší)*)
+  VAR_INPUT
+    rqSet            : bool R_EDGE;  (*ádost o nastavení novıch parametrù pro slubu Avahi*)
+    avahiEnable      : bool;  (*povolit nebo zakázat slubu Avahi*)
+  END_VAR
+  VAR_IN_OUT
+    hostName         : string [80];  (*nové Avahi hostname*)
+  END_VAR
+  VAR_OUTPUT
+    done             : bool;  (*nové jméno nastaveno*)
+    busy             : bool;  (*blok pracuje*)
+    err              : bool;  (*došlo k chybì*)
+    errTxt           : string [80];  (*popis chyby*)
+  END_VAR
+  VAR
+    delay            : TON;
+    tim              : TON;
+    tmpEnable        : bool;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION GetAvahiHostName2 : string
+(*Vrátí hostname sluby Avahi. Je-li sluba zakázána vrací prázdnı string. (pouze pro Foxtrot 2 nebo TC800, v2.2.053 nebo vyšší)*)
+END_FUNCTION
+
+__DECL FUNCTION SetWebPSW : bool
+(*Nastavit heslo pro pøístup na web stránky PLC. Funkce nastaví nové pøihlašovací jméno a heslo pro pøístup na web stránky v PLC*)
+  VAR_INPUT
+    user             : usint;  (*cislo radku v tabulce uzivatelu (0...9)*)
+  END_VAR
+  VAR_IN_OUT
+    name             : string [80];  (*nové pøihlašovací jméno*)
+    password         : string [80];  (*nové heslo*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION VerifyWebPSW : bool
+(*Ovìøit heslo pro pøístup na web stránky PLC. Funkce oveøí, zda-li je nastaveno poadované pøihlašovací jméno a heslo pro pøístup na web stránky v PLC*)
+  VAR_INPUT
+    user             : usint;  (*èíslo øádku v tabulce uivatelù (0...9)*)
+  END_VAR
+  VAR_IN_OUT
+    name             : string [80];  (*pøihlašovací jméno*)
+    password         : string [80];  (*heslo*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetWebMAC : bool
+(*Nastavit MAC pro pøístup na web stránky PLC. Funkce nastaví novou MAC adresu pro pøístup na web stránky v PLC*)
+  VAR_INPUT
+    user             : usint;  (*èíslo øádku v tabulce uivatelù (0...9)*)
+  END_VAR
+  VAR_IN_OUT
+    MAC              : string [80];  (*nová MAC adresa ('00:11:22:33:44:55')*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION VerifyWebMAC : bool
+(*Ovìøit MAC pro pøístup na web stránky PLC. Funkce oveøí, zda-li je nastavena poadovaná MAC adresa pro pøístup na web stránky v PLC*)
+  VAR_INPUT
+    user             : usint;  (*èíslo øádku v tabulce uivatelù (0...9)*)
+  END_VAR
+  VAR_IN_OUT
+    MAC              : string [80];  (*MAC adresa ('00:11:22:33:44:55')*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SetWebLevel : bool
+(*Nastavit uroven pro pøístup na web stránky PLC. Funkce nastaví uroven pro pøístup na web stránky v PLC*)
+  VAR_INPUT
+    user             : usint;  (*èíslo øádku v tabulce uivatelù (0...9)*)
+    level            : sint;  (*nová úroveò (-1,0,...,9)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION VerifyWebLevel : bool
+(*Ovìøit úroveò pro pøístup na web stránky PLC. Funkce oveøí, zda-li je nastavena poadovaná úroveò pro pøístup na web stránky v PLC*)
+  VAR_INPUT
+    user             : usint;  (*èíslo øádku v tabulce uivatelù (0...9)*)
+    level            : sint;  (*ovìøovaná úroveò (-1,0,...,9)*)
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION_BLOCK fbSetConfigWebPsw2
+(*Nastavit jméno a heslo pro pøístup na konfiguraèní web stránky PLC (pouze pro Foxtrot 2 nebo TC800, v2.2.053 nebo vyšší, Merecat web server)*)
+  VAR_INPUT
+    rqSet            : bool R_EDGE;  (*ádost o nastavení nového jména a hesla*)
+    clrAndSet        : bool;  (*smazat stará jména a hesla a zaloit jedno nové nebo pouze pøidat další*)
+  END_VAR
+  VAR_IN_OUT
+    name             : string [80];  (*nové pøihlašovací jméno*)
+    password         : string [80];  (*nové heslo*)
+  END_VAR
+  VAR_OUTPUT
+    done             : bool;  (*jméno a heslo nastaveno*)
+    busy             : bool;  (*blok pracuje*)
+    err              : bool;  (*došlo k chybì*)
+    errTxt           : string [80];  (*popis chyby*)
+  END_VAR
+  VAR
+    tim              : TON;
+  END_VAR
+END_FUNCTION_BLOCK
+
+__DECL FUNCTION SystemDisplayBacklightOn : bool
+(*Rozsvítit podsvícení systémového displeje
+   Funkce rozsítí podsvícení LCD displeje na základním modulu PLC.
+   Funkce vrací TRUE, pokud je displej na základním modulu dostupnı,
+   jinak vrací FALSE.*)
+  VAR
+    tmp              : udint;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION SystemDisplayBacklightOff : bool
+(*Zhasnout podsvícení systémového displeje
+   Funkce zhasne podsvícení LCD displeje na základním modulu PLC.
+   Funkce vrací TRUE, pokud je displej na základním modulu dostupnı,
+   jinak vrací FALSE.*)
+  VAR
+    tmp              : udint;
+  END_VAR
+END_FUNCTION
+
+__DECL FUNCTION_BLOCK fbTick
+(*Periodickı èasovaè*)
+  VAR_INPUT
+    IN               : bool;  (*povolení èasovaèe*)
+    PT               : time;  (*perioda vıstupních pulzù*)
+  END_VAR
+  VAR_OUTPUT
+    Q                : bool;  (*vıstup èasovaèe*)
+    ET               : time;  (*prùbìnı èas v rámci periody*)
+  END_VAR
+  VAR
+    WasRun           : bool;
+    RunTime          : time;
+  END_VAR
+END_FUNCTION_BLOCK
+
+
+

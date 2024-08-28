@@ -1,0 +1,109 @@
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\RANDOM.ST'
+
+#defpou fbrandom
+  real maxValue,
+  time timeNow,
+  real value,
+  string[81] valueString,
+  usint output
+
+ 
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\RANDOM.ST'
+#pou fbrandom
+#srcline 1 ;FUNCTION_BLOCK fbrandom
+
+#struct fbrandom__temp__
+  string[82] PS0__st__,
+  string[82] PSC__st__
+P     61
+fbrandom_L0:
+ LINK __SizeOf(fbrandom__temp__)
+#srcline 23 ;  timeNow := GetTime();
+ LEA  __Instance__GetTime
+ CAL  GetTime_L0
+ WRX  timeNow
+#debug_left time timeNow
+#srcline 25 ;  // prevede promennou timeNow na text a text orizne pouze na podledni 2 cisla
+#srcline 26 ;  valueString := RIGHT(TIME_TO_STRING(timeNow), 2);
+ LD   0   ; null string
+ WRY  PS0__st__[0]
+ LEAY PS0__st__[0]
+ LD   80
+ DST    ; Level 1
+ LD   0   ; null string
+ WRY  PSC__st__[0]
+ LEAY PSC__st__[0]
+ LD   80
+ DST    ; Level 2
+ LDX  timeNow
+#debug time timeNow
+ SCNV $3330;  IEC_TIME _TO_ IEC_STRING
+ PDST   ; Level 2
+ LEAY PSC__st__[0]
+ LD   2
+ SRGT 
+ PDST   ; Level 1
+ LD   0   ; null string
+ LEAX valueString
+ WRI  
+ LEAX valueString
+ LD   80
+ DST    ; Level 1
+ LEAY PS0__st__[0]
+ SCON 
+#debug_left string valueString
+ PDST   ; Level 1
+#srcline 28 ;  // prevede oriznuty text na desetinne cislo
+#srcline 29 ;  value := STRING_TO_REAL(valueString);
+ LEAX valueString
+#debug string valueString
+ SCNV $301C;  IEC_STRING _TO_ IEC_REAL
+ WRX  value
+#debug_left real value
+#srcline 30 ;  
+#srcline 31 ;  // cislo se vynasobi maximalni hodnoutou deleno 99 (protoze posledni 2 cisla casu v milisekundach je maximalne 99)
+#srcline 32 ;  // vypoctene cislo se nasledne zaorkouhli, to zaruci nedesetinny vysledek
+#srcline 33 ;  value := round(value * (maxValue / 99));
+ LDX  value
+#debug real value
+ LDX  maxValue
+#debug real maxValue
+ LD   real 99
+ DIF
+ MUF
+ RND
+ WRX  value
+#debug_left real value
+#srcline 34 ;  
+#srcline 35 ;  // vysledne desetinne cislo se prevede na USINT (zabira mene mista v pameti) a posle se na vystup bloku
+#srcline 36 ;  output := REAL_TO_USINT(value);
+ LDX  value
+#debug real value
+ RND
+ UFW
+ AND  $FF
+ WRX  output
+#debug_left usint output
+#srcline 37 ;  
+#srcline 38 ;END_FUNCTION_BLOCK
+ ULNK
+RET
+E     61
+
+; Initialize - variables
+P     61
+fbrandom__InstanceInit__:
+ LINK 0
+ LD   real 99
+ WRX  maxValue
+ ULNK
+RET
+E     61
+; End initialize - variables
+#endpou 
+
+
+
+ 
+
+#srcfile ''

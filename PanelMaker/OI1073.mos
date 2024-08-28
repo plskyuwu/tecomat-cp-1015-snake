@@ -1,0 +1,1283 @@
+;*******************************************************************************
+;Upozornìní
+;Soubor je automaticky regenerován a všechny ruèní modifikace budou ztracené.
+
+#ifndef _DeklarPT_
+  #error F'Soubor DeklarPT.mos není v souborech projektu pøítomen nebo není pøedøazen souboru OI1073.mos!'
+#endif
+
+
+#table byte OI1073_beginText_Table = 0
+#def   OI1073_beginText  __indx(OI1073_beginText_Table)
+#def   OI1073_Disp1_Table_Indx 	OI1073_beginText + 1	;Disp1
+
+
+#def   OI1073_START_Flow_Indx 	 OI1073_beginText + 2	;START
+#def   OI1073_Msg1_Table_Indx 	OI1073_beginText + 3
+#def   OI1073_Msg2_Table_Indx 	OI1073_beginText + 4
+#def   OI1073_Msg3_Table_Indx 	OI1073_beginText + 5
+#def   OI1073_Msg4_Table_Indx 	OI1073_beginText + 6
+#def   OI1073_Msg5_Table_Indx 	OI1073_beginText + 7
+#def   OI1073_Msg6_Table_Indx 	OI1073_beginText + 8
+#def   OI1073_Msg7_Table_Indx 	OI1073_beginText + 9
+#def   OI1073_Msg8_Table_Indx 	OI1073_beginText + 10
+#def   OI1073_Msg9_Table_Indx 	OI1073_beginText + 11
+#def   OI1073_Msg10_Table_Indx 	OI1073_beginText + 12
+#def   OI1073_Msg11_Table_Indx 	OI1073_beginText + 13
+#def   OI1073_Msg12_Table_Indx 	OI1073_beginText + 14
+#def   OI1073_Msg13_Table_Indx 	OI1073_beginText + 15
+#def   OI1073_Msg14_Table_Indx 	OI1073_beginText + 16
+#def   OI1073_Msg15_Table_Indx 	OI1073_beginText + 17
+#def   OI1073_Msg16_Table_Indx 	OI1073_beginText + 18
+#def   OI1073_Msg17_Table_Indx 	OI1073_beginText + 19
+#def   OI1073_Msg18_Table_Indx 	OI1073_beginText + 20
+#def   OI1073_Msg19_Table_Indx 	OI1073_beginText + 21
+#def   OI1073_Msg20_Table_Indx 	OI1073_beginText + 22
+#def   OI1073_Msg21_Table_Indx 	OI1073_beginText + 23
+#def   OI1073_Msg22_Table_Indx 	OI1073_beginText + 24
+#def   OI1073_Msg23_Table_Indx 	OI1073_beginText + 25
+#def   OI1073_Msg24_Table_Indx 	OI1073_beginText + 26
+#def   OI1073_Msg25_Table_Indx 	OI1073_beginText + 27
+#def   OI1073_Msg26_Table_Indx 	OI1073_beginText + 28
+#def   OI1073_Msg27_Table_Indx 	OI1073_beginText + 29
+#def   OI1073_Msg28_Table_Indx 	OI1073_beginText + 30
+#def   OI1073_Msg29_Table_Indx 	OI1073_beginText + 31
+#def   OI1073_Msg30_Table_Indx 	OI1073_beginText + 32
+#def   OI1073_Msg31_Table_Indx 	OI1073_beginText + 33
+#def   OI1073_Msg32_Table_Indx 	OI1073_beginText + 34
+#def   OI1073_Msg33_Table_Indx 	OI1073_beginText + 35
+#def   OI1073_Msg34_Table_Indx 	OI1073_beginText + 36
+#def   OI1073_Msg35_Table_Indx 	OI1073_beginText + 37
+#def   OI1073_Msg36_Table_Indx 	OI1073_beginText + 38
+#def   OI1073_Msg37_Table_Indx 	OI1073_beginText + 39
+#def   OI1073_Msg38_Table_Indx 	OI1073_beginText + 40
+#def   OI1073_Msg39_Table_Indx 	OI1073_beginText + 41
+#def   OI1073_Msg40_Table_Indx 	OI1073_beginText + 42
+#def   OI1073_Msg41_Table_Indx 	OI1073_beginText + 43
+#def   OI1073_Msg42_Table_Indx 	OI1073_beginText + 44
+#def   OI1073_Msg43_Table_Indx 	OI1073_beginText + 45
+#def   OI1073_Msg44_Table_Indx 	OI1073_beginText + 46
+#def   OI1073_Msg45_Table_Indx 	OI1073_beginText + 47
+#def   OI1073_Msg46_Table_Indx 	OI1073_beginText + 48
+#def   OI1073_Msg47_Table_Indx 	OI1073_beginText + 49
+#def   OI1073_Msg48_Table_Indx 	OI1073_beginText + 50
+#def   OI1073_Msg49_Table_Indx 	OI1073_beginText + 51
+#def   OI1073_Msg50_Table_Indx 	OI1073_beginText + 52
+#def   OI1073_Msg51_Table_Indx 	OI1073_beginText + 53
+#def   OI1073_Msg52_Table_Indx 	OI1073_beginText + 54
+#def   OI1073_Msg53_Table_Indx 	OI1073_beginText + 55
+#def   OI1073_Msg54_Table_Indx 	OI1073_beginText + 56
+#def   OI1073_Msg55_Table_Indx 	OI1073_beginText + 57
+#def   OI1073_Msg56_Table_Indx 	OI1073_beginText + 58
+#def   OI1073_Msg57_Table_Indx 	OI1073_beginText + 59
+#def   OI1073_Msg58_Table_Indx 	OI1073_beginText + 60
+#def   OI1073_Msg59_Table_Indx 	OI1073_beginText + 61
+#def   OI1073_Msg60_Table_Indx 	OI1073_beginText + 62
+#def   OI1073_Msg61_Table_Indx 	OI1073_beginText + 63
+#def   OI1073_Msg62_Table_Indx 	OI1073_beginText + 64
+#def   OI1073_Msg63_Table_Indx 	OI1073_beginText + 65
+#def   OI1073_Msg64_Table_Indx 	OI1073_beginText + 66
+#def   OI1073_Score_Table_Indx_MinMax 	OI1073_beginText + 67
+#def   OI1073_Speed_Table_Indx_MinMax 	OI1073_beginText + 68
+#def   OI1073_LastTable_Index     OI1073_beginText + 69
+
+
+#reg word OI1073_NumTextPT
+#reg word OI1073_NumTextOldPT
+#reg bit  OI1073_NewText
+
+#ifndef CALL_TER14
+  #struct TIDStruct_PM
+          word _NumText,
+          word _MinText,
+          word _MaxText,
+          byte _EnableBits,
+          byte _SizeDisp,
+          byte _KeybTer,
+          byte _InterTer[128]
+
+  #def CALL_TER14     ter 14
+  #def CALL_TEROI1073 ter  7
+#endif
+
+#reg TIDStruct_PM OI1073
+#reg byte         OI1073_SIMKey
+#reg byte         OI1073_KeybPT
+#reg byte OI1073_InterPT
+
+#ifndef score
+  #error F'score ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#ifndef speed
+  #error F'speed ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[0] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[0])
+  #error F'screen0[0] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[1] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[1])
+  #error F'screen0[1] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[2] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[2])
+  #error F'screen0[2] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[3] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[3])
+  #error F'screen0[3] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[4] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[4])
+  #error F'screen0[4] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[5] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[5])
+  #error F'screen0[5] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[6] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[6])
+  #error F'screen0[6] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[7] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[7])
+  #error F'screen0[7] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[8] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[8])
+  #error F'screen0[8] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[9] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[9])
+  #error F'screen0[9] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[10] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[10])
+  #error F'screen0[10] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[11] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[11])
+  #error F'screen0[11] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[12] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[12])
+  #error F'screen0[12] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[13] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[13])
+  #error F'screen0[13] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[14] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[14])
+  #error F'screen0[14] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen0
+  #error F'screen0[15] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen0[15])
+  #error F'screen0[15] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[0] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[0])
+  #error F'screen1[0] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[1] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[1])
+  #error F'screen1[1] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[2] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[2])
+  #error F'screen1[2] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[3] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[3])
+  #error F'screen1[3] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[4] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[4])
+  #error F'screen1[4] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[5] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[5])
+  #error F'screen1[5] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[6] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[6])
+  #error F'screen1[6] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[7] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[7])
+  #error F'screen1[7] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[8] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[8])
+  #error F'screen1[8] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[9] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[9])
+  #error F'screen1[9] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[10] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[10])
+  #error F'screen1[10] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[11] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[11])
+  #error F'screen1[11] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[12] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[12])
+  #error F'screen1[12] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[13] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[13])
+  #error F'screen1[13] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[14] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[14])
+  #error F'screen1[14] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen1
+  #error F'screen1[15] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen1[15])
+  #error F'screen1[15] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[0] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[0])
+  #error F'screen2[0] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[1] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[1])
+  #error F'screen2[1] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[2] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[2])
+  #error F'screen2[2] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[3] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[3])
+  #error F'screen2[3] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[4] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[4])
+  #error F'screen2[4] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[5] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[5])
+  #error F'screen2[5] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[6] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[6])
+  #error F'screen2[6] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[7] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[7])
+  #error F'screen2[7] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[8] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[8])
+  #error F'screen2[8] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[9] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[9])
+  #error F'screen2[9] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[10] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[10])
+  #error F'screen2[10] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[11] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[11])
+  #error F'screen2[11] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[12] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[12])
+  #error F'screen2[12] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[13] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[13])
+  #error F'screen2[13] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[14] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[14])
+  #error F'screen2[14] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen2
+  #error F'screen2[15] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen2[15])
+  #error F'screen2[15] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[0] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[0])
+  #error F'screen3[0] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[1] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[1])
+  #error F'screen3[1] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[2] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[2])
+  #error F'screen3[2] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[3] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[3])
+  #error F'screen3[3] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[4] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[4])
+  #error F'screen3[4] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[5] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[5])
+  #error F'screen3[5] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[6] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[6])
+  #error F'screen3[6] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[7] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[7])
+  #error F'screen3[7] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[8] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[8])
+  #error F'screen3[8] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[9] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[9])
+  #error F'screen3[9] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[10] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[10])
+  #error F'screen3[10] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[11] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[11])
+  #error F'screen3[11] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[12] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[12])
+  #error F'screen3[12] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[13] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[13])
+  #error F'screen3[13] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[14] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[14])
+  #error F'screen3[14] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+#ifndef screen3
+  #error F'screen3[15] ... Promìnná neexistuje, nebo je založena pozdìji! Displej : Disp1'
+#endif
+#if $8 < __typeID(screen3[15])
+  #error F'screen3[15] ... Typ promìnné pro zprávu/menu nesmí být vìtší než byte. Displej : Disp1'
+#endif
+
+#if _PLCTYPE_ < CP7001
+  #error F'Def. tabulky panelu obsahují funkce pro vyšší øadu PLC.'
+#endif
+
+  #ifndef _TTS_PM_D80_V21
+  #struct _TTS_PM_D80_V21
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[21]
+  #endif
+
+  #ifndef _TTS_PM_D32_V21
+  #struct _TTS_PM_D32_V21
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[21]
+  #endif
+
+  #ifndef _TTS_PM_D80_V22
+  #struct _TTS_PM_D80_V22
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[22]
+  #endif
+
+  #ifndef _TTS_PM_D32_V22
+  #struct _TTS_PM_D32_V22
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[22]
+  #endif
+
+  #ifndef _TTS_PM_D80_V23
+  #struct _TTS_PM_D80_V23
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[23]
+  #endif
+
+  #ifndef _TTS_PM_D32_V23
+  #struct _TTS_PM_D32_V23
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[23]
+  #endif
+
+  #ifndef _TTS_PM_D80_V24
+  #struct _TTS_PM_D80_V24
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[24]
+  #endif
+
+  #ifndef _TTS_PM_D32_V24
+  #struct _TTS_PM_D32_V24
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[24]
+  #endif
+
+  #ifndef _TTS_PM_D80_V25
+  #struct _TTS_PM_D80_V25
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[25]
+  #endif
+
+  #ifndef _TTS_PM_D32_V25
+  #struct _TTS_PM_D32_V25
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[25]
+  #endif
+
+  #ifndef _TTS_PM_D80_V26
+  #struct _TTS_PM_D80_V26
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[26]
+  #endif
+
+  #ifndef _TTS_PM_D32_V26
+  #struct _TTS_PM_D32_V26
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[26]
+  #endif
+
+  #ifndef _TTS_PM_D80_V27
+  #struct _TTS_PM_D80_V27
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[27]
+  #endif
+
+  #ifndef _TTS_PM_D32_V27
+  #struct _TTS_PM_D32_V27
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[27]
+  #endif
+
+  #ifndef _TTS_PM_D80_V28
+  #struct _TTS_PM_D80_V28
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[28]
+  #endif
+
+  #ifndef _TTS_PM_D32_V28
+  #struct _TTS_PM_D32_V28
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[28]
+  #endif
+
+  #ifndef _TTS_PM_D80_V29
+  #struct _TTS_PM_D80_V29
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[29]
+  #endif
+
+  #ifndef _TTS_PM_D32_V29
+  #struct _TTS_PM_D32_V29
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[29]
+  #endif
+
+  #ifndef _TTS_PM_D80_V30
+  #struct _TTS_PM_D80_V30
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[30]
+  #endif
+
+  #ifndef _TTS_PM_D32_V30
+  #struct _TTS_PM_D32_V30
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[30]
+  #endif
+
+  #ifndef _TTS_PM_D80_V31
+  #struct _TTS_PM_D80_V31
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[31]
+  #endif
+
+  #ifndef _TTS_PM_D32_V31
+  #struct _TTS_PM_D32_V31
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[31]
+  #endif
+
+  #ifndef _TTS_PM_D80_V32
+  #struct _TTS_PM_D80_V32
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[32]
+  #endif
+
+  #ifndef _TTS_PM_D32_V32
+  #struct _TTS_PM_D32_V32
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[32]
+  #endif
+
+  #ifndef _TTS_PM_D80_V33
+  #struct _TTS_PM_D80_V33
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[33]
+  #endif
+
+  #ifndef _TTS_PM_D32_V33
+  #struct _TTS_PM_D32_V33
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[33]
+  #endif
+
+  #ifndef _TTS_PM_D80_V34
+  #struct _TTS_PM_D80_V34
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[34]
+  #endif
+
+  #ifndef _TTS_PM_D32_V34
+  #struct _TTS_PM_D32_V34
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[34]
+  #endif
+
+  #ifndef _TTS_PM_D80_V35
+  #struct _TTS_PM_D80_V35
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[35]
+  #endif
+
+  #ifndef _TTS_PM_D32_V35
+  #struct _TTS_PM_D32_V35
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[35]
+  #endif
+
+  #ifndef _TTS_PM_D80_V36
+  #struct _TTS_PM_D80_V36
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[36]
+  #endif
+
+  #ifndef _TTS_PM_D32_V36
+  #struct _TTS_PM_D32_V36
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[36]
+  #endif
+
+  #ifndef _TTS_PM_D80_V37
+  #struct _TTS_PM_D80_V37
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[37]
+  #endif
+
+  #ifndef _TTS_PM_D32_V37
+  #struct _TTS_PM_D32_V37
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[37]
+  #endif
+
+  #ifndef _TTS_PM_D80_V38
+  #struct _TTS_PM_D80_V38
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[38]
+  #endif
+
+  #ifndef _TTS_PM_D32_V38
+  #struct _TTS_PM_D32_V38
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[38]
+  #endif
+
+  #ifndef _TTS_PM_D80_V39
+  #struct _TTS_PM_D80_V39
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[39]
+  #endif
+
+  #ifndef _TTS_PM_D32_V39
+  #struct _TTS_PM_D32_V39
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[39]
+  #endif
+
+  #ifndef _TTS_PM_D80_V40
+  #struct _TTS_PM_D80_V40
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[40]
+  #endif
+
+  #ifndef _TTS_PM_D32_V40
+  #struct _TTS_PM_D32_V40
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[40]
+  #endif
+
+  #ifndef _TTS_PM_D80_V41
+  #struct _TTS_PM_D80_V41
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[41]
+  #endif
+
+  #ifndef _TTS_PM_D32_V41
+  #struct _TTS_PM_D32_V41
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[41]
+  #endif
+
+  #ifndef _TTS_PM_D80_V42
+  #struct _TTS_PM_D80_V42
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[42]
+  #endif
+
+  #ifndef _TTS_PM_D32_V42
+  #struct _TTS_PM_D32_V42
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[42]
+  #endif
+
+  #ifndef _TTS_PM_D80_V43
+  #struct _TTS_PM_D80_V43
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[43]
+  #endif
+
+  #ifndef _TTS_PM_D32_V43
+  #struct _TTS_PM_D32_V43
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[43]
+  #endif
+
+  #ifndef _TTS_PM_D80_V44
+  #struct _TTS_PM_D80_V44
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[44]
+  #endif
+
+  #ifndef _TTS_PM_D32_V44
+  #struct _TTS_PM_D32_V44
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[44]
+  #endif
+
+  #ifndef _TTS_PM_D80_V45
+  #struct _TTS_PM_D80_V45
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[45]
+  #endif
+
+  #ifndef _TTS_PM_D32_V45
+  #struct _TTS_PM_D32_V45
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[45]
+  #endif
+
+  #ifndef _TTS_PM_D80_V46
+  #struct _TTS_PM_D80_V46
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[46]
+  #endif
+
+  #ifndef _TTS_PM_D32_V46
+  #struct _TTS_PM_D32_V46
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[46]
+  #endif
+
+  #ifndef _TTS_PM_D80_V47
+  #struct _TTS_PM_D80_V47
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[47]
+  #endif
+
+  #ifndef _TTS_PM_D32_V47
+  #struct _TTS_PM_D32_V47
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[47]
+  #endif
+
+  #ifndef _TTS_PM_D80_V48
+  #struct _TTS_PM_D80_V48
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[48]
+  #endif
+
+  #ifndef _TTS_PM_D32_V48
+  #struct _TTS_PM_D32_V48
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[48]
+  #endif
+
+  #ifndef _TTS_PM_D80_V49
+  #struct _TTS_PM_D80_V49
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[49]
+  #endif
+
+  #ifndef _TTS_PM_D32_V49
+  #struct _TTS_PM_D32_V49
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[49]
+  #endif
+
+  #ifndef _TTS_PM_D80_V50
+  #struct _TTS_PM_D80_V50
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[50]
+  #endif
+
+  #ifndef _TTS_PM_D32_V50
+  #struct _TTS_PM_D32_V50
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[50]
+  #endif
+
+  #ifndef _TTS_PM_D80_V51
+  #struct _TTS_PM_D80_V51
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[51]
+  #endif
+
+  #ifndef _TTS_PM_D32_V51
+  #struct _TTS_PM_D32_V51
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[51]
+  #endif
+
+  #ifndef _TTS_PM_D80_V52
+  #struct _TTS_PM_D80_V52
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[52]
+  #endif
+
+  #ifndef _TTS_PM_D32_V52
+  #struct _TTS_PM_D32_V52
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[52]
+  #endif
+
+  #ifndef _TTS_PM_D80_V53
+  #struct _TTS_PM_D80_V53
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[53]
+  #endif
+
+  #ifndef _TTS_PM_D32_V53
+  #struct _TTS_PM_D32_V53
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[53]
+  #endif
+
+  #ifndef _TTS_PM_D80_V54
+  #struct _TTS_PM_D80_V54
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[54]
+  #endif
+
+  #ifndef _TTS_PM_D32_V54
+  #struct _TTS_PM_D32_V54
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[54]
+  #endif
+
+  #ifndef _TTS_PM_D80_V55
+  #struct _TTS_PM_D80_V55
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[55]
+  #endif
+
+  #ifndef _TTS_PM_D32_V55
+  #struct _TTS_PM_D32_V55
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[55]
+  #endif
+
+  #ifndef _TTS_PM_D80_V56
+  #struct _TTS_PM_D80_V56
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[56]
+  #endif
+
+  #ifndef _TTS_PM_D32_V56
+  #struct _TTS_PM_D32_V56
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[56]
+  #endif
+
+  #ifndef _TTS_PM_D80_V57
+  #struct _TTS_PM_D80_V57
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[57]
+  #endif
+
+  #ifndef _TTS_PM_D32_V57
+  #struct _TTS_PM_D32_V57
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[57]
+  #endif
+
+  #ifndef _TTS_PM_D80_V58
+  #struct _TTS_PM_D80_V58
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[58]
+  #endif
+
+  #ifndef _TTS_PM_D32_V58
+  #struct _TTS_PM_D32_V58
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[58]
+  #endif
+
+  #ifndef _TTS_PM_D80_V59
+  #struct _TTS_PM_D80_V59
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[59]
+  #endif
+
+  #ifndef _TTS_PM_D32_V59
+  #struct _TTS_PM_D32_V59
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[59]
+  #endif
+
+  #ifndef _TTS_PM_D80_V60
+  #struct _TTS_PM_D80_V60
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[60]
+  #endif
+
+  #ifndef _TTS_PM_D32_V60
+  #struct _TTS_PM_D32_V60
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[60]
+  #endif
+
+  #ifndef _TTS_PM_D80_V61
+  #struct _TTS_PM_D80_V61
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[61]
+  #endif
+
+  #ifndef _TTS_PM_D32_V61
+  #struct _TTS_PM_D32_V61
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[61]
+  #endif
+
+  #ifndef _TTS_PM_D80_V62
+  #struct _TTS_PM_D80_V62
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[62]
+  #endif
+
+  #ifndef _TTS_PM_D32_V62
+  #struct _TTS_PM_D32_V62
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[62]
+  #endif
+
+  #ifndef _TTS_PM_D80_V63
+  #struct _TTS_PM_D80_V63
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[63]
+  #endif
+
+  #ifndef _TTS_PM_D32_V63
+  #struct _TTS_PM_D32_V63
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[63]
+  #endif
+
+  #ifndef _TTS_PM_D80_V64
+  #struct _TTS_PM_D80_V64
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[64]
+  #endif
+
+  #ifndef _TTS_PM_D32_V64
+  #struct _TTS_PM_D32_V64
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[64]
+  #endif
+
+  #ifndef _TTS_PM_D80_V65
+  #struct _TTS_PM_D80_V65
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[65]
+  #endif
+
+  #ifndef _TTS_PM_D32_V65
+  #struct _TTS_PM_D32_V65
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[65]
+  #endif
+
+  #ifndef _TTS_PM_D80_V66
+  #struct _TTS_PM_D80_V66
+          _TTS_PM_TDisplayHEAD80 head,
+          _TTS_PM_TVarDesc       varDesc[66]
+  #endif
+
+  #ifndef _TTS_PM_D32_V66
+  #struct _TTS_PM_D32_V66
+          _TTS_PM_TDisplayHEAD32 head,
+          _TTS_PM_TVarDesc       varDesc[66]
+  #endif
+
+#table _TTS_PM_D80_V66 OI1073_Disp1_Table_Indx, OI1073_Disp1_Table = 
+          1,14,80,66,
+            'mmmmmmmmmmmmmmmm|Scr',
+            'mmmmmmmmmmmmmmmm|VVV',
+            'mmmmmmmmmmmmmmmm|Spd',
+            'mmmmmmmmmmmmmmmm| VV',
+	__offset(__IECFLATTYPE(screen0[0])), __IECtypeID(__IECFLATTYPE(screen0[0])),__sizeof(__IECFLATTYPE(screen0[0])), __typeID(__IECFLATTYPE(screen0[0])),0, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[1])), __IECtypeID(__IECFLATTYPE(screen0[1])),__sizeof(__IECFLATTYPE(screen0[1])), __typeID(__IECFLATTYPE(screen0[1])),1, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[2])), __IECtypeID(__IECFLATTYPE(screen0[2])),__sizeof(__IECFLATTYPE(screen0[2])), __typeID(__IECFLATTYPE(screen0[2])),2, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[3])), __IECtypeID(__IECFLATTYPE(screen0[3])),__sizeof(__IECFLATTYPE(screen0[3])), __typeID(__IECFLATTYPE(screen0[3])),3, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[4])), __IECtypeID(__IECFLATTYPE(screen0[4])),__sizeof(__IECFLATTYPE(screen0[4])), __typeID(__IECFLATTYPE(screen0[4])),4, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[5])), __IECtypeID(__IECFLATTYPE(screen0[5])),__sizeof(__IECFLATTYPE(screen0[5])), __typeID(__IECFLATTYPE(screen0[5])),5, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[6])), __IECtypeID(__IECFLATTYPE(screen0[6])),__sizeof(__IECFLATTYPE(screen0[6])), __typeID(__IECFLATTYPE(screen0[6])),6, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[7])), __IECtypeID(__IECFLATTYPE(screen0[7])),__sizeof(__IECFLATTYPE(screen0[7])), __typeID(__IECFLATTYPE(screen0[7])),7, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[8])), __IECtypeID(__IECFLATTYPE(screen0[8])),__sizeof(__IECFLATTYPE(screen0[8])), __typeID(__IECFLATTYPE(screen0[8])),8, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[9])), __IECtypeID(__IECFLATTYPE(screen0[9])),__sizeof(__IECFLATTYPE(screen0[9])), __typeID(__IECFLATTYPE(screen0[9])),9, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[10])), __IECtypeID(__IECFLATTYPE(screen0[10])),__sizeof(__IECFLATTYPE(screen0[10])), __typeID(__IECFLATTYPE(screen0[10])),10, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[11])), __IECtypeID(__IECFLATTYPE(screen0[11])),__sizeof(__IECFLATTYPE(screen0[11])), __typeID(__IECFLATTYPE(screen0[11])),11, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[12])), __IECtypeID(__IECFLATTYPE(screen0[12])),__sizeof(__IECFLATTYPE(screen0[12])), __typeID(__IECFLATTYPE(screen0[12])),12, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[13])), __IECtypeID(__IECFLATTYPE(screen0[13])),__sizeof(__IECFLATTYPE(screen0[13])), __typeID(__IECFLATTYPE(screen0[13])),13, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[14])), __IECtypeID(__IECFLATTYPE(screen0[14])),__sizeof(__IECFLATTYPE(screen0[14])), __typeID(__IECFLATTYPE(screen0[14])),14, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen0[15])), __IECtypeID(__IECFLATTYPE(screen0[15])),__sizeof(__IECFLATTYPE(screen0[15])), __typeID(__IECFLATTYPE(screen0[15])),15, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[0])), __IECtypeID(__IECFLATTYPE(screen1[0])),__sizeof(__IECFLATTYPE(screen1[0])), __typeID(__IECFLATTYPE(screen1[0])),20, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[1])), __IECtypeID(__IECFLATTYPE(screen1[1])),__sizeof(__IECFLATTYPE(screen1[1])), __typeID(__IECFLATTYPE(screen1[1])),21, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[2])), __IECtypeID(__IECFLATTYPE(screen1[2])),__sizeof(__IECFLATTYPE(screen1[2])), __typeID(__IECFLATTYPE(screen1[2])),22, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[3])), __IECtypeID(__IECFLATTYPE(screen1[3])),__sizeof(__IECFLATTYPE(screen1[3])), __typeID(__IECFLATTYPE(screen1[3])),23, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[4])), __IECtypeID(__IECFLATTYPE(screen1[4])),__sizeof(__IECFLATTYPE(screen1[4])), __typeID(__IECFLATTYPE(screen1[4])),24, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[5])), __IECtypeID(__IECFLATTYPE(screen1[5])),__sizeof(__IECFLATTYPE(screen1[5])), __typeID(__IECFLATTYPE(screen1[5])),25, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[6])), __IECtypeID(__IECFLATTYPE(screen1[6])),__sizeof(__IECFLATTYPE(screen1[6])), __typeID(__IECFLATTYPE(screen1[6])),26, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[7])), __IECtypeID(__IECFLATTYPE(screen1[7])),__sizeof(__IECFLATTYPE(screen1[7])), __typeID(__IECFLATTYPE(screen1[7])),27, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[8])), __IECtypeID(__IECFLATTYPE(screen1[8])),__sizeof(__IECFLATTYPE(screen1[8])), __typeID(__IECFLATTYPE(screen1[8])),28, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[9])), __IECtypeID(__IECFLATTYPE(screen1[9])),__sizeof(__IECFLATTYPE(screen1[9])), __typeID(__IECFLATTYPE(screen1[9])),29, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[10])), __IECtypeID(__IECFLATTYPE(screen1[10])),__sizeof(__IECFLATTYPE(screen1[10])), __typeID(__IECFLATTYPE(screen1[10])),30, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[11])), __IECtypeID(__IECFLATTYPE(screen1[11])),__sizeof(__IECFLATTYPE(screen1[11])), __typeID(__IECFLATTYPE(screen1[11])),31, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[12])), __IECtypeID(__IECFLATTYPE(screen1[12])),__sizeof(__IECFLATTYPE(screen1[12])), __typeID(__IECFLATTYPE(screen1[12])),32, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[13])), __IECtypeID(__IECFLATTYPE(screen1[13])),__sizeof(__IECFLATTYPE(screen1[13])), __typeID(__IECFLATTYPE(screen1[13])),33, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[14])), __IECtypeID(__IECFLATTYPE(screen1[14])),__sizeof(__IECFLATTYPE(screen1[14])), __typeID(__IECFLATTYPE(screen1[14])),34, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen1[15])), __IECtypeID(__IECFLATTYPE(screen1[15])),__sizeof(__IECFLATTYPE(screen1[15])), __typeID(__IECFLATTYPE(screen1[15])),35, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(score), __IECtypeID(score),__sizeof(score), __typeID(score),37,readOnly + dispDec, 3 des 0, 0,
+	__offset(__IECFLATTYPE(screen2[0])), __IECtypeID(__IECFLATTYPE(screen2[0])),__sizeof(__IECFLATTYPE(screen2[0])), __typeID(__IECFLATTYPE(screen2[0])),40, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[1])), __IECtypeID(__IECFLATTYPE(screen2[1])),__sizeof(__IECFLATTYPE(screen2[1])), __typeID(__IECFLATTYPE(screen2[1])),41, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[2])), __IECtypeID(__IECFLATTYPE(screen2[2])),__sizeof(__IECFLATTYPE(screen2[2])), __typeID(__IECFLATTYPE(screen2[2])),42, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[3])), __IECtypeID(__IECFLATTYPE(screen2[3])),__sizeof(__IECFLATTYPE(screen2[3])), __typeID(__IECFLATTYPE(screen2[3])),43, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[4])), __IECtypeID(__IECFLATTYPE(screen2[4])),__sizeof(__IECFLATTYPE(screen2[4])), __typeID(__IECFLATTYPE(screen2[4])),44, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[5])), __IECtypeID(__IECFLATTYPE(screen2[5])),__sizeof(__IECFLATTYPE(screen2[5])), __typeID(__IECFLATTYPE(screen2[5])),45, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[6])), __IECtypeID(__IECFLATTYPE(screen2[6])),__sizeof(__IECFLATTYPE(screen2[6])), __typeID(__IECFLATTYPE(screen2[6])),46, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[7])), __IECtypeID(__IECFLATTYPE(screen2[7])),__sizeof(__IECFLATTYPE(screen2[7])), __typeID(__IECFLATTYPE(screen2[7])),47, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[8])), __IECtypeID(__IECFLATTYPE(screen2[8])),__sizeof(__IECFLATTYPE(screen2[8])), __typeID(__IECFLATTYPE(screen2[8])),48, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[9])), __IECtypeID(__IECFLATTYPE(screen2[9])),__sizeof(__IECFLATTYPE(screen2[9])), __typeID(__IECFLATTYPE(screen2[9])),49, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[10])), __IECtypeID(__IECFLATTYPE(screen2[10])),__sizeof(__IECFLATTYPE(screen2[10])), __typeID(__IECFLATTYPE(screen2[10])),50, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[11])), __IECtypeID(__IECFLATTYPE(screen2[11])),__sizeof(__IECFLATTYPE(screen2[11])), __typeID(__IECFLATTYPE(screen2[11])),51, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[12])), __IECtypeID(__IECFLATTYPE(screen2[12])),__sizeof(__IECFLATTYPE(screen2[12])), __typeID(__IECFLATTYPE(screen2[12])),52, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[13])), __IECtypeID(__IECFLATTYPE(screen2[13])),__sizeof(__IECFLATTYPE(screen2[13])), __typeID(__IECFLATTYPE(screen2[13])),53, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[14])), __IECtypeID(__IECFLATTYPE(screen2[14])),__sizeof(__IECFLATTYPE(screen2[14])), __typeID(__IECFLATTYPE(screen2[14])),54, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen2[15])), __IECtypeID(__IECFLATTYPE(screen2[15])),__sizeof(__IECFLATTYPE(screen2[15])), __typeID(__IECFLATTYPE(screen2[15])),55, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[0])), __IECtypeID(__IECFLATTYPE(screen3[0])),__sizeof(__IECFLATTYPE(screen3[0])), __typeID(__IECFLATTYPE(screen3[0])),60, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[1])), __IECtypeID(__IECFLATTYPE(screen3[1])),__sizeof(__IECFLATTYPE(screen3[1])), __typeID(__IECFLATTYPE(screen3[1])),61, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[2])), __IECtypeID(__IECFLATTYPE(screen3[2])),__sizeof(__IECFLATTYPE(screen3[2])), __typeID(__IECFLATTYPE(screen3[2])),62, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[3])), __IECtypeID(__IECFLATTYPE(screen3[3])),__sizeof(__IECFLATTYPE(screen3[3])), __typeID(__IECFLATTYPE(screen3[3])),63, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[4])), __IECtypeID(__IECFLATTYPE(screen3[4])),__sizeof(__IECFLATTYPE(screen3[4])), __typeID(__IECFLATTYPE(screen3[4])),64, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[5])), __IECtypeID(__IECFLATTYPE(screen3[5])),__sizeof(__IECFLATTYPE(screen3[5])), __typeID(__IECFLATTYPE(screen3[5])),65, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[6])), __IECtypeID(__IECFLATTYPE(screen3[6])),__sizeof(__IECFLATTYPE(screen3[6])), __typeID(__IECFLATTYPE(screen3[6])),66, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[7])), __IECtypeID(__IECFLATTYPE(screen3[7])),__sizeof(__IECFLATTYPE(screen3[7])), __typeID(__IECFLATTYPE(screen3[7])),67, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[8])), __IECtypeID(__IECFLATTYPE(screen3[8])),__sizeof(__IECFLATTYPE(screen3[8])), __typeID(__IECFLATTYPE(screen3[8])),68, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[9])), __IECtypeID(__IECFLATTYPE(screen3[9])),__sizeof(__IECFLATTYPE(screen3[9])), __typeID(__IECFLATTYPE(screen3[9])),69, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[10])), __IECtypeID(__IECFLATTYPE(screen3[10])),__sizeof(__IECFLATTYPE(screen3[10])), __typeID(__IECFLATTYPE(screen3[10])),70, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[11])), __IECtypeID(__IECFLATTYPE(screen3[11])),__sizeof(__IECFLATTYPE(screen3[11])), __typeID(__IECFLATTYPE(screen3[11])),71, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[12])), __IECtypeID(__IECFLATTYPE(screen3[12])),__sizeof(__IECFLATTYPE(screen3[12])), __typeID(__IECFLATTYPE(screen3[12])),72, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[13])), __IECtypeID(__IECFLATTYPE(screen3[13])),__sizeof(__IECFLATTYPE(screen3[13])), __typeID(__IECFLATTYPE(screen3[13])),73, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[14])), __IECtypeID(__IECFLATTYPE(screen3[14])),__sizeof(__IECFLATTYPE(screen3[14])), __typeID(__IECFLATTYPE(screen3[14])),74, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(__IECFLATTYPE(screen3[15])), __IECtypeID(__IECFLATTYPE(screen3[15])),__sizeof(__IECFLATTYPE(screen3[15])), __typeID(__IECFLATTYPE(screen3[15])),75, dispMes+readOnly, 1, OI1073_Msg1_Table_Indx,
+	__offset(speed), __IECtypeID(speed),__sizeof(speed), __typeID(speed),78,readOnly + dispDec, 2 des 0, 0
+
+#table byte OI1073_START_Flow_Indx, OI1073_START_Flow = 
+            OI1073_Disp1_Table_Indx, (OI1073_Disp1_Table_Indx)/256,
+            OI1073_Disp1_Table_Indx, (OI1073_Disp1_Table_Indx)/256,
+            OI1073_Disp1_Table_Indx, (OI1073_Disp1_Table_Indx)/256,
+            enableList + enableEdit
+
+#table byte OI1073_Msg1_Table_Indx, OI1073_Msg1_Table =
+          ' ','O','a','o'
+
+
+
+
+#table byte OI1073_LastTable_Index, OI1073_LastTable = 0
+
+#table  word OI1073_CKey = 
+        0
+
+#table word OI1073_UpKey = 
+        0
+
+#table word OI1073_DownKey = 
+        0
+
+P 60
+OI1073_init:
+  LD  80
+  WR  OI1073._SizeDisp
+  LD  OI1073_START_Flow_Indx
+  WR  OI1073._NumText
+
+  RET
+E 60
+
+P 63
+  CAL OI1073_init
+E 63
+
+P 62
+  CAL OI1073_init
+E 62
+
+#ifndef OI1073_UserKeyb
+  #reg byte OI1073_UserKeyb
+#endif
+P 0
+  LD  80
+  LD  OI1073._SizeDisp
+  EQ 
+  CAC OI1073_init
+  LD  OI1073_Keyb
+  EQ  0
+  JMD Receive_OI1073_SIMKey
+  LD  OI1073_Keyb
+  WR  OI1073_UserKeyb
+  WR  OI1073._KeybTer
+  WR  OI1073_KeybPT
+  JMP TerHandle_OI1073
+Receive_OI1073_SIMKey:
+  LD  OI1073_SIMKey
+  EQ  0
+  JMD EndReceive_OI1073_SIMKey
+  LD  OI1073_SIMKey
+  WR  OI1073._KeybTer
+  WR  OI1073_UserKeyb
+  WR  OI1073_KeybPT
+  RES OI1073_SIMKey
+EndReceive_OI1073_SIMKey:
+
+TerHandle_OI1073:
+  LD  __indx(OI1073._NumText)
+  LD  __indx(OI1073_VideoRam)
+  CALL_TEROI1073
+  LD  OI1073_NumTextPT
+  LD  OI1073_NumTextOldPT
+  EQ
+  WRC OI1073_NewText
+  LD  OI1073_NumTextPT
+  WR  OI1073_NumTextOldPT
+
+  ;if variable edit, block move witk keyb UP, Down and C
+  LD  OI1073._InterTer
+  GT  2
+  LD  OI1073._InterTer
+  EQ  7
+  NEG
+  AND
+  JMD OI1073_KeybBlock
+  #ifdef OI1073_DownKey
+    LD  OI1073_KeybPT
+    EQ  $19
+    JMC OI1073_EndDown
+    LD  OI1073._NumText
+    EQ  OI1073_NumTextPT
+    JMC OI1073_EndDown
+    LD  OI1073._NumText
+    LD  OI1073_beginText+1
+    SUB
+    LTB OI1073_DownKey
+    JMC OI1073_EndDown
+    WR  OI1073._NumText
+  #endif
+OI1073_EndDown:
+
+  #ifdef OI1073_UpKey
+    LD  OI1073_KeybPT
+    EQ  $18
+    JMC OI1073_EndUp
+    LD  OI1073._NumText
+    EQ  OI1073_NumTextPT
+    JMC OI1073_EndUp
+    LD  OI1073._NumText
+    LD  OI1073_beginText+1
+    SUB
+    LTB OI1073_UpKey
+    JMC OI1073_EndUp
+    WR  OI1073._NumText
+  #endif
+OI1073_EndUp:
+
+  #ifdef OI1073_CKey
+    LD  OI1073_KeybPT
+    EQ  $7F
+    LD  OI1073_InterPT
+    EQ  0
+    LD  OI1073_InterPT
+    EQ  7
+    OR
+    AND
+    JMC OI1073_KonecC
+    LD  OI1073._NumText
+    LD  OI1073_beginText+1
+    SUB
+    LTB OI1073_CKey
+    JMC OI1073_KonecC
+    WR  OI1073._NumText
+  #endif
+OI1073_KonecC:
+OI1073_KeybBlock:
+
+
+
+
+  LD  0
+  WR  OI1073_KeybPT
+  LD  OI1073._InterTer
+  WR  OI1073_InterPT
+  LD  OI1073._NumText
+  WR  OI1073_NumTextPT
+E 0
+
+
+;*******************************************************************************
+;Poslední zmìny : 19. 4. 2024 8:08:27
+;Generováno programem MOSAIC
+;© 2001-2019 Teco a.s.
+;Verze : 1.4

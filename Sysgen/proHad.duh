@@ -1,0 +1,19 @@
+FUNCTION_BLOCK fbrandom
+(* Fukcni blok ktery vyvari nahodne cislo od 0 do 99;  Maximalni hodnota se da nastavit promennou maxValue;  Autor: Matej Gottstein;  Specialni podekovani Ondreji Veselemu za zdokonaleni algoritmu pro vypocet nahodneho cisla*)
+  VAR_INPUT
+    maxValue : REAL := 99;
+  END_VAR
+  VAR
+    timeNow : TIME;
+    value : REAL;
+    valueString : STRING;
+  END_VAR
+  VAR_OUTPUT
+    output : USINT;
+  END_VAR
+END_FUNCTION_BLOCK 
+
+
+
+
+

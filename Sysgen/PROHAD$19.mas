@@ -1,0 +1,22 @@
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\PROHAD.MCF'
+ 
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\PROHAD.MCF'
+
+; ***** RESOURCE - CPM
+#reg prgGame Game
+#srcline 4 ;    PROGRAM Game WITH FreeWheeling : prgGame ();
+P     0
+ LEA  Game
+ CAL  prgGame_L0
+E     0
+
+; Initialize - program
+P     58
+ LEA  Game
+ CAL  prgGame__InstanceInit__
+E     58
+
+
+ 
+
+#srcfile ''

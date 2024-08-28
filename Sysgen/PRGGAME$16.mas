@@ -1,0 +1,1171 @@
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\PRGGAME.ST'
+
+; Global variables
+#reg  usint score
+#reg  usint speed
+#reg  usint screen0[16]
+#reg  usint screen1[16]
+#reg  usint screen2[16]
+#reg  usint screen3[16]
+
+#defpou prgGame
+  usint[192] snake,  ; 0-63 jsou clanky hada, 0-2 jsou: souradnice x, souradnice y, stav clanku (0 = neni, 3 = telo, 1 = hlava)
+  usint[192] snakePrevious,
+  usint snakeDirection,  ; 0 = Do prava, 1 = Dolu, 2 = Do leva, 3 = Nahoru
+  usint snakeDirectionPrevious,
+  usint applePosX,
+  usint applePosY,
+  bool appleExists,
+  fbrandom applePosGeneratorX,
+  fbrandom applePosGeneratorY,
+  usint[64] screen,  ; Screen je pomocna promenna pro zjednoduseni prace s obrazovkou
+  TON sleep,
+  time sleepTime,
+  time sleepProgress,
+  bool sleepStart,
+  bool run,
+  bool init
+
+#table byte __Init____screen0 = 
+      0;
+#table byte __Init____screen1 = 
+      0;
+#table byte __Init____screen2 = 
+      0;
+#table byte __Init____screen3 = 
+      0;
+ 
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\PRGGAME.ST'
+#pou prgGame
+#srcline 14 ;PROGRAM prgGame
+
+#struct prgGame__temp__
+  usint i,
+  usint j,
+  udint P0__st__,
+  usint P1__st__,
+  usint P2__st__,
+  usint P3__st__,
+  udint P4__st__,
+  usint P5__st__,
+  usint P6__st__,
+  usint P7__st__,
+  usint P8__st__,
+  usint P9__st__,
+  usint P10__st__,
+  usint P11__st__,
+  usint P12__st__,
+  usint P13__st__,
+  usint P14__st__,
+  udint P15__st__
+P     61
+prgGame_L0:
+ LINK __SizeOf(prgGame__temp__)
+; Initialize - dynamic variables
+; End initialize - dynamic variables
+#srcline 49 ;  IF init THEN
+ LDX  init
+#debug bool init
+ JMC  prgGame_L1
+#srcline 50 ;    snake[0, 2] := 1; // Hlava hada
+ LD   usint 1
+ WRX  snake[2]
+#debug_left usint snake[0,2]
+#srcline 51 ;    snake[0, 0] := 0; // Pozice hada x
+ LD   usint 0
+ WRX  snake[0]
+#debug_left usint snake[0,0]
+#srcline 52 ;    snake[0, 1] := 0; // Pozice hada y
+ LD   usint 0
+ WRX  snake[1]
+#debug_left usint snake[0,1]
+#srcline 53 ;  
+#srcline 54 ;    init := false;
+ LD   bool 0       ; false
+ WRX  init
+#debug_left bool init
+#srcline 55 ;  END_IF;
+prgGame_L1:
+#srcline 57 ;  // Ètení tlaèítek panelu a zmìna smìru hada
+#srcline 58 ;  IF OI1073_Keyb <> 0 THEN
+ LD   OI1073_Keyb
+#debug usint OI1073_Keyb
+ LD   usint 0
+ EQ
+ NEG
+ JMC  prgGame_L3
+#srcline 59 ;    CASE OI1073_Keyb OF
+ LD   OI1073_Keyb
+#debug usint OI1073_Keyb
+ WRY  P0__st__
+ LD   24
+ LDY  P0__st__
+ EQ  
+ JMC  prgGame_L6
+#srcline 60 ;      24: IF not snakeDirectionPrevious = 1 THEN snakeDirection := 3; END_IF; // Nahoru
+ LDX  snakeDirectionPrevious
+#debug usint snakeDirectionPrevious
+ LD   usint 1
+ EQ
+ NEG
+ JMC  prgGame_L7
+ LD   usint 3
+ WRX  snakeDirection
+#debug_left usint snakeDirection
+prgGame_L7:
+ JMP  prgGame_L5
+prgGame_L6:
+ LD   25
+ LDY  P0__st__
+ EQ  
+ JMC  prgGame_L9
+#srcline 61 ;      25: IF not snakeDirectionPrevious = 3 THEN snakeDirection := 1; END_IF; // Dolu
+ LDX  snakeDirectionPrevious
+#debug usint snakeDirectionPrevious
+ LD   usint 3
+ EQ
+ NEG
+ JMC  prgGame_L10
+ LD   usint 1
+ WRX  snakeDirection
+#debug_left usint snakeDirection
+prgGame_L10:
+ JMP  prgGame_L5
+prgGame_L9:
+ LD   26
+ LDY  P0__st__
+ EQ  
+ JMC  prgGame_L12
+#srcline 62 ;      26: IF not snakeDirectionPrevious = 2 THEN snakeDirection := 0; END_IF;; // Do prava
+ LDX  snakeDirectionPrevious
+#debug usint snakeDirectionPrevious
+ LD   usint 2
+ EQ
+ NEG
+ JMC  prgGame_L13
+ LD   usint 0
+ WRX  snakeDirection
+#debug_left usint snakeDirection
+prgGame_L13:
+ JMP  prgGame_L5
+prgGame_L12:
+ LD   27
+ LDY  P0__st__
+ EQ  
+ JMC  prgGame_L15
+#srcline 63 ;      27: IF not snakeDirectionPrevious = 0 THEN snakeDirection := 2; END_IF;; // Do leva
+ LDX  snakeDirectionPrevious
+#debug usint snakeDirectionPrevious
+ LD   usint 0
+ EQ
+ NEG
+ JMC  prgGame_L16
+ LD   usint 2
+ WRX  snakeDirection
+#debug_left usint snakeDirection
+prgGame_L16:
+ JMP  prgGame_L5
+prgGame_L15:
+prgGame_L5:
+#srcline 65 ;  END_IF;
+prgGame_L3:
+#srcline 67 ;  // Rychlost opakovani herni logiky je omezeno promennou run, vice na radku 187
+#srcline 68 ;  IF run THEN // Herní logika //////////////////////////////////////////////////////////////////////
+ LDX  run
+#debug bool run
+ JMC  prgGame_L18
+#srcline 70 ;  // Zapamatovani predchoziho smeru hada
+#srcline 71 ;  snakeDirectionPrevious := snakeDirection;
+ LDX  snakeDirection
+#debug usint snakeDirection
+ WRX  snakeDirectionPrevious
+#debug_left usint snakeDirectionPrevious
+#srcline 73 ;  // Zapamatovani predchozich pozice hada
+#srcline 74 ;  FOR i := 0 TO 63 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 63
+ WRY  P1__st__
+prgGame_L20:
+ LDY  i
+ LDY  P1__st__
+ GT   
+ JMD  prgGame_L21
+ DBG  
+#srcline 75 ;    FOR j := 0 TO 2 DO
+ LD   usint 0
+ WRY  j
+ LD   usint 2
+ WRY  P2__st__
+prgGame_L22:
+ LDY  j
+ LDY  P2__st__
+ GT   
+ JMD  prgGame_L23
+ DBG  
+#srcline 76 ;      snakePrevious[i, j] := snake[i, j];
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 2   ; Range Check
+ ADD
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,j]
+ LEAX snakePrevious
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 2   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snakePrevious[i,j]
+#srcline 77 ;    END_FOR;
+ LDY  j
+ LD   1
+ ADD  
+ WRY  j
+ JMP  prgGame_L22
+prgGame_L23:
+ NOP  -1
+#srcline 78 ;  END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L20
+prgGame_L21:
+ NOP  -1
+#srcline 80 ;  // Pokud jablko není na poli, náhodnì se umístí
+#srcline 81 ;  IF not appleExists THEN
+ LDX  appleExists
+#debug bool appleExists
+ NEG
+ JMC  prgGame_L24
+#srcline 82 ;    applePosGeneratorX(maxValue := 15, output => applePosX);
+ LD   real 15
+ WRX  applePosGeneratorX~maxValue
+#debug_left real applePosGeneratorX~maxValue
+ LEAX applePosGeneratorX
+ CAL  fbrandom_L0
+; output assigment 
+ LDX  applePosGeneratorX~output
+#debug usint applePosGeneratorX~output
+ WRX  applePosX
+#debug_left usint applePosX
+#srcline 83 ;    applePosGeneratorY(maxValue := 3, output => applePosY);
+ LD   real 3
+ WRX  applePosGeneratorY~maxValue
+#debug_left real applePosGeneratorY~maxValue
+ LEAX applePosGeneratorY
+ CAL  fbrandom_L0
+; output assigment 
+ LDX  applePosGeneratorY~output
+#debug usint applePosGeneratorY~output
+ WRX  applePosY
+#debug_left usint applePosY
+#srcline 84 ;    appleExists := true;
+ LD   bool -1       ; true
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 85 ;    
+#srcline 86 ;    FOR i := 0 TO 63 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 63
+ WRY  P3__st__
+prgGame_L26:
+ LDY  i
+ LDY  P3__st__
+ GT   
+ JMD  prgGame_L27
+ DBG  
+#srcline 87 ;      IF (applePosX = snake[i, 0]) and (applePosY = snake[i, 1]) THEN
+ LDX  applePosX
+#debug usint applePosX
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,0]
+ EQ
+ LDX  applePosY
+#debug usint applePosY
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,1]
+ EQ
+ AND
+ JMC  prgGame_L28
+#srcline 88 ;        appleExists := false;
+ LD   bool 0       ; false
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 89 ;      END_IF;
+prgGame_L28:
+#srcline 90 ;    END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L26
+prgGame_L27:
+ NOP  -1
+#srcline 91 ;  END_IF;
+prgGame_L24:
+#srcline 93 ;  // Pokud je hlava hada na stejném poli jako jablko, jablko zmizí a zvýší se skóre o 1
+#srcline 94 ;  IF ((snake[0, 0] = applePosX) and (snake[0, 1] = applePosY)) and appleExists THEN
+ LDX  snake[0]
+#debug usint snake[0,0]
+ LDX  applePosX
+#debug usint applePosX
+ EQ
+ LDX  snake[1]
+#debug usint snake[0,1]
+ LDX  applePosY
+#debug usint applePosY
+ EQ
+ AND
+ LDX  appleExists
+#debug bool appleExists
+ AND
+ JMC  prgGame_L30
+#srcline 95 ;    appleExists := false;
+ LD   bool 0       ; false
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 96 ;    score := score + 1;
+ LD   score
+#debug usint score
+ LD   usint 1
+ ADD
+ AND  $FF
+ WR   score
+#debug_left usint score
+#srcline 97 ;  END_IF;
+prgGame_L30:
+#srcline 98 ;  
+#srcline 99 ;  // Pohyb hada
+#srcline 100 ;  CASE snakeDirection OF
+ LDX  snakeDirection
+#debug usint snakeDirection
+ WRY  P4__st__
+ LD   0
+ LDY  P4__st__
+ EQ  
+ JMC  prgGame_L33
+#srcline 101 ;    0: snake[0, 0] := snake[0, 0] + 1;
+ LDX  snake[0]
+#debug usint snake[0,0]
+ LD   usint 1
+ ADD
+ AND  $FF
+ WRX  snake[0]
+#debug_left usint snake[0,0]
+ JMP  prgGame_L32
+prgGame_L33:
+ LD   1
+ LDY  P4__st__
+ EQ  
+ JMC  prgGame_L34
+#srcline 102 ;    1: snake[0, 1] := snake[0, 1] + 1;
+ LDX  snake[1]
+#debug usint snake[0,1]
+ LD   usint 1
+ ADD
+ AND  $FF
+ WRX  snake[1]
+#debug_left usint snake[0,1]
+ JMP  prgGame_L32
+prgGame_L34:
+ LD   2
+ LDY  P4__st__
+ EQ  
+ JMC  prgGame_L35
+#srcline 103 ;    2: snake[0, 0] := snake[0, 0] - 1;
+ LDX  snake[0]
+#debug usint snake[0,0]
+ LD   usint 1
+ SUB
+ AND  $FF
+ WRX  snake[0]
+#debug_left usint snake[0,0]
+ JMP  prgGame_L32
+prgGame_L35:
+ LD   3
+ LDY  P4__st__
+ EQ  
+ JMC  prgGame_L36
+#srcline 104 ;    3: snake[0, 1] := snake[0, 1] - 1;
+ LDX  snake[1]
+#debug usint snake[0,1]
+ LD   usint 1
+ SUB
+ AND  $FF
+ WRX  snake[1]
+#debug_left usint snake[0,1]
+ JMP  prgGame_L32
+prgGame_L36:
+prgGame_L32:
+#srcline 106 ;  
+#srcline 107 ;  // Zvìtšování hada podle skóre a nasledovani hlavy hada
+#srcline 108 ;  FOR i := 1 TO score DO
+ LD   usint 1
+ WRY  i
+ LD   score
+#debug usint score
+ WRY  P5__st__
+prgGame_L37:
+ LDY  i
+ LDY  P5__st__
+ GT   
+ JMD  prgGame_L38
+ DBG  
+#srcline 109 ;    snake[i, 2] := 3;
+ LD   usint 3
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  2   ; Index - Low range[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,2]
+#srcline 110 ;    snake[i + 1, 0] := snakePrevious[i, 0];
+ LEAX snakePrevious
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snakePrevious[i,0]
+ LEAX snake
+ LDY  i
+#debug usint i
+ LD   usint 1
+ ADD
+ AND  $FF
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i+1,0]
+#srcline 111 ;    snake[i + 1, 1] := snakePrevious[i, 1];
+ LEAX snakePrevious
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snakePrevious[i,1]
+ LEAX snake
+ LDY  i
+#debug usint i
+ LD   usint 1
+ ADD
+ AND  $FF
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i+1,1]
+#srcline 112 ;  END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L37
+prgGame_L38:
+ NOP  -1
+#srcline 114 ;  // Kolize hada sama se sebou
+#srcline 115 ;  FOR i := 1 TO 63 DO
+ LD   usint 1
+ WRY  i
+ LD   usint 63
+ WRY  P6__st__
+prgGame_L39:
+ LDY  i
+ LDY  P6__st__
+ GT   
+ JMD  prgGame_L40
+ DBG  
+#srcline 116 ;    IF ((snake[0, 0] = snake[i, 0]) and (snake[0, 1] = snake[i, 1])) and snake[i, 2] = 3 THEN
+ LDX  snake[0]
+#debug usint snake[0,0]
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,0]
+ EQ
+ LDX  snake[1]
+#debug usint snake[0,1]
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,1]
+ EQ
+ AND
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  2   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,2]
+ LD   usint 3
+ EQ
+ AND
+ JMC  prgGame_L41
+#srcline 117 ;      score := 0;
+ LD   usint 0
+ WR   score
+#debug_left usint score
+#srcline 118 ;      FOR i := 0 TO 63 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 63
+ WRY  P7__st__
+prgGame_L43:
+ LDY  i
+ LDY  P7__st__
+ GT   
+ JMD  prgGame_L44
+ DBG  
+#srcline 119 ;        snake[i, 0] := 0;
+ LD   usint 0
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,0]
+#srcline 120 ;        snake[i, 1] := 0;
+ LD   usint 0
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,1]
+#srcline 121 ;        snake[i, 2] := 0;
+ LD   usint 0
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  2   ; Index - Low range[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,2]
+#srcline 122 ;      END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L43
+prgGame_L44:
+ NOP  -1
+#srcline 123 ;      snake[0, 2] := 1;
+ LD   usint 1
+ WRX  snake[2]
+#debug_left usint snake[0,2]
+#srcline 124 ;      appleExists := 0;
+ LD   bool 0       ; false
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 125 ;      snakeDirection := 0;
+ LD   usint 0
+ WRX  snakeDirection
+#debug_left usint snakeDirection
+#srcline 126 ;      snakeDirectionPrevious := 0;
+ LD   usint 0
+ WRX  snakeDirectionPrevious
+#debug_left usint snakeDirectionPrevious
+#srcline 127 ;    END_IF;
+prgGame_L41:
+#srcline 128 ;  END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L39
+prgGame_L40:
+ NOP  -1
+#srcline 130 ;  // Pokud had vyjede z hracího pole, resetovat hru
+#srcline 131 ;  IF (snake[0, 0] > 15) or (snake[0, 1] > 3) THEN
+ LDX  snake[0]
+#debug usint snake[0,0]
+ LD   usint 15
+ GT
+ LDX  snake[1]
+#debug usint snake[0,1]
+ LD   usint 3
+ GT
+ OR  
+ JMC  prgGame_L45
+#srcline 132 ;    score := 0;
+ LD   usint 0
+ WR   score
+#debug_left usint score
+#srcline 133 ;    FOR i := 0 TO 63 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 63
+ WRY  P8__st__
+prgGame_L47:
+ LDY  i
+ LDY  P8__st__
+ GT   
+ JMD  prgGame_L48
+ DBG  
+#srcline 134 ;      snake[i, 0] := 0;
+ LD   usint 0
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,0]
+#srcline 135 ;      snake[i, 1] := 0;
+ LD   usint 0
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,1]
+#srcline 136 ;      snake[i, 2] := 0;
+ LD   usint 0
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  2   ; Index - Low range[2]
+ ADD     ; + offset 
+ WRI 
+#debug_left usint snake[i,2]
+#srcline 137 ;    END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L47
+prgGame_L48:
+ NOP  -1
+#srcline 138 ;    snake[0, 2] := 1;
+ LD   usint 1
+ WRX  snake[2]
+#debug_left usint snake[0,2]
+#srcline 139 ;    appleExists := 0;
+ LD   bool 0       ; false
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 140 ;    snakeDirection := 0;
+ LD   usint 0
+ WRX  snakeDirection
+#debug_left usint snakeDirection
+#srcline 141 ;    snakeDirectionPrevious := 0;
+ LD   usint 0
+ WRX  snakeDirectionPrevious
+#debug_left usint snakeDirectionPrevious
+#srcline 142 ;  END_IF;
+prgGame_L45:
+#srcline 144 ;  // Rendering obrazovky /////////////
+#srcline 145 ;  FOR i := 0 TO 3 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 3
+ WRY  P9__st__
+prgGame_L49:
+ LDY  i
+ LDY  P9__st__
+ GT   
+ JMD  prgGame_L50
+ DBG  
+#srcline 146 ;    FOR j := 0 TO 15 DO
+ LD   usint 0
+ WRY  j
+ LD   usint 15
+ WRY  P10__st__
+prgGame_L51:
+ LDY  j
+ LDY  P10__st__
+ GT   
+ JMD  prgGame_L52
+ DBG  
+#srcline 147 ;      screen[i, j] := 0;
+ LD   usint 0
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[i,j]
+#srcline 148 ;    END_FOR;
+ LDY  j
+ LD   1
+ ADD  
+ WRY  j
+ JMP  prgGame_L51
+prgGame_L52:
+ NOP  -1
+#srcline 149 ;  END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L49
+prgGame_L50:
+ NOP  -1
+#srcline 151 ;  // Rendering jablka
+#srcline 152 ;  IF appleExists THEN
+ LDX  appleExists
+#debug bool appleExists
+ JMC  prgGame_L53
+#srcline 153 ;    screen[applePosY, applePosX] := 2;
+ LD   usint 2
+ LEAX screen
+ LDX  applePosY
+#debug usint applePosY
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDX  applePosX
+#debug usint applePosX
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[applePosY,applePosX]
+#srcline 154 ;  END_IF;
+prgGame_L53:
+#srcline 156 ;  // Rozbalit snake a zapsat informace o clancich do screen
+#srcline 157 ;  FOR i := 0 TO 63 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 63
+ WRY  P11__st__
+prgGame_L55:
+ LDY  i
+ LDY  P11__st__
+ GT   
+ JMD  prgGame_L56
+ DBG  
+#srcline 158 ;    FOR j := 0 TO 2 DO
+ LD   usint 0
+ WRY  j
+ LD   usint 2
+ WRY  P12__st__
+prgGame_L57:
+ LDY  j
+ LDY  P12__st__
+ GT   
+ JMD  prgGame_L58
+ DBG  
+#srcline 159 ;      IF snake[i, 2] <> 0 THEN
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  2   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,2]
+ LD   usint 0
+ EQ
+ NEG
+ JMC  prgGame_L59
+#srcline 160 ;        screen[snake[i, 1], snake[i, 0]] := snake[i, 2];
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  2   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,2]
+ LEAX screen
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD  1   ; Index - Low range[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,1]
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LEAX snake
+ LDY  i
+#debug usint i
+ RCHK 63   ; Range Check
+ MUL  3   ; Num items[2]
+ ADD     ; + offset 
+ LDI  
+#debug usint snake[i,0]
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[snake[i,1],snake[i,0]]
+#srcline 161 ;      END_IF;
+prgGame_L59:
+#srcline 162 ;    END_FOR;
+ LDY  j
+ LD   1
+ ADD  
+ WRY  j
+ JMP  prgGame_L57
+prgGame_L58:
+ NOP  -1
+#srcline 163 ;  END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L55
+prgGame_L56:
+ NOP  -1
+#srcline 165 ;  // Zapsání dat z promenne screen do jednotlivých rádku
+#srcline 166 ;  FOR i := 0 TO 3 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 3
+ WRY  P13__st__
+prgGame_L61:
+ LDY  i
+ LDY  P13__st__
+ GT   
+ JMD  prgGame_L62
+ DBG  
+#srcline 167 ;    FOR j := 0 TO 15 DO
+ LD   usint 0
+ WRY  j
+ LD   usint 15
+ WRY  P14__st__
+prgGame_L63:
+ LDY  j
+ LDY  P14__st__
+ GT   
+ JMD  prgGame_L64
+ DBG  
+#srcline 168 ;      IF i = 0 THEN screen0[j] := screen[i,j];
+ LDY  i
+#debug usint i
+ LD   usint 0
+ EQ
+ JMC  prgGame_L65
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ LDI  
+#debug usint screen[i,j]
+ LEA  screen0
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen0[j]
+#srcline 169 ;      ELSIF i = 1 THEN screen1[j] := screen[i,j];
+ JMP  prgGame_L66
+prgGame_L65:
+ LDY  i
+#debug usint i
+ LD   usint 1
+ EQ
+ JMC  prgGame_L67
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ LDI  
+#debug usint screen[i,j]
+ LEA  screen1
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen1[j]
+#srcline 170 ;      ELSIF i = 2 THEN screen2[j] := screen[i,j];
+ JMP  prgGame_L66
+prgGame_L67:
+ LDY  i
+#debug usint i
+ LD   usint 2
+ EQ
+ JMC  prgGame_L68
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ LDI  
+#debug usint screen[i,j]
+ LEA  screen2
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen2[j]
+#srcline 171 ;      ELSE screen3[j] := screen[i,j];
+ JMP  prgGame_L66
+prgGame_L68:
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ LDI  
+#debug usint screen[i,j]
+ LEA  screen3
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen3[j]
+#srcline 172 ;      END_IF;
+prgGame_L66:
+#srcline 173 ;    END_FOR;
+ LDY  j
+ LD   1
+ ADD  
+ WRY  j
+ JMP  prgGame_L63
+prgGame_L64:
+ NOP  -1
+#srcline 174 ;  END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L61
+prgGame_L62:
+ NOP  -1
+#srcline 175 ;  
+#srcline 176 ;  END_IF; // Konec herní logiky ////////////////////////////////////////////////////////////////////
+prgGame_L18:
+#srcline 177 ;  
+#srcline 178 ;  // Zmena rychlosti hry podle skore
+#srcline 179 ;  CASE score OF
+ LD   score
+#debug usint score
+ WRY  P15__st__
+ LD   0
+ LDY  P15__st__
+ EQ  
+ JMC  prgGame_L70
+#srcline 180 ;    0: speed := 1;
+ LD   usint 1
+ WR   speed
+#debug_left usint speed
+ JMP  prgGame_L69
+prgGame_L70:
+ LD   15
+ LDY  P15__st__
+ EQ  
+ JMC  prgGame_L71
+#srcline 181 ;    15: speed := 2;
+ LD   usint 2
+ WR   speed
+#debug_left usint speed
+ JMP  prgGame_L69
+prgGame_L71:
+prgGame_L69:
+#srcline 183 ;  
+#srcline 184 ;  // Kvuli tomu ze plc provadi program dokola a dokola tak je potreba omezit rychlost herni logiky
+#srcline 185 ;  // To je provedeno pomoci promenne run a funkcniho bloku TON
+#srcline 186 ;  IF run THEN
+ LDX  run
+#debug bool run
+ JMC  prgGame_L72
+#srcline 187 ;    sleepStart := false;
+ LD   bool 0       ; false
+ WRX  sleepStart
+#debug_left bool sleepStart
+#srcline 188 ;  ELSE
+ JMP  prgGame_L73
+prgGame_L72:
+#srcline 189 ;    sleepStart := true;
+ LD   bool -1       ; true
+ WRX  sleepStart
+#debug_left bool sleepStart
+#srcline 190 ;  END_IF;
+prgGame_L73:
+#srcline 191 ;  
+#srcline 192 ;  sleepTime := REAL_TO_TIME(1/USINT_TO_REAL(speed*2)*1000);
+ LD   real 1
+ LD   speed
+#debug usint speed
+ LD   usint 2
+ MUL
+ AND  $FF
+ ULF
+ DIF
+ LD   real 1000
+ MUF
+ RND
+ IFL
+ WRX  sleepTime
+#debug_left time sleepTime
+#srcline 193 ;  sleep(IN := sleepStart, PT := sleepTime, ET => sleepProgress, Q => run);
+ LDX  sleepStart
+#debug bool sleepStart
+ WRX  sleep~IN
+#debug_left bool sleep~IN
+ LDX  sleepTime
+#debug time sleepTime
+ WRX  sleep~PT
+#debug_left time sleep~PT
+ LEAX sleep
+ CAL  TON_L0
+; output assigment 
+ LDX  sleep~ET
+#debug time sleep~ET
+ WRX  sleepProgress
+#debug_left time sleepProgress
+ LDX  sleep~Q
+#debug bool sleep~Q
+ WRX  run
+#debug_left bool run
+#srcline 194 ;END_PROGRAM
+ ULNK
+RET
+E     61
+
+; Initialize - variables
+P     61
+prgGame__InstanceInit__:
+ LINK 0
+ LD   usint 0
+ WRX  snakeDirection
+ LD   usint 0
+ WRX  snakeDirectionPrevious
+ LD   bool 0   ; false
+ WRX  appleExists
+ LEAX applePosGeneratorX
+ CAL  fbrandom__InstanceInit__
+ LEAX applePosGeneratorY
+ CAL  fbrandom__InstanceInit__
+ LD   bool -1   ; true
+ WRX  run
+ LD   bool -1   ; true
+ WRX  init
+ ULNK
+RET
+E     61
+; End initialize - variables
+#endpou 
+
+
+P     58
+; Initialize non retain global variables 
+ LD   usint 0
+ WR   score
+ LD   usint 1
+ WR   speed
+ LD   0
+ SRC  byte __Init____screen0
+ LD   0
+ LD   16
+ MOV  byte screen0[0]
+ LD   0
+ SRC  byte __Init____screen1
+ LD   0
+ LD   16
+ MOV  byte screen1[0]
+ LD   0
+ SRC  byte __Init____screen2
+ LD   0
+ LD   16
+ MOV  byte screen2[0]
+ LD   0
+ SRC  byte __Init____screen3
+ LD   0
+ LD   16
+ MOV  byte screen3[0]
+E     58
+
+
+ 
+
+#srcfile ''

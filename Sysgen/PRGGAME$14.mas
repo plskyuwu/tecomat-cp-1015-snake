@@ -1,0 +1,304 @@
+#srcfile 'C:\TECOAPP\MC4GOTTSTEIN\PROHAD\PRGGAME.ST'
+
+; Global variables
+#reg  usint score
+#reg  usint speed
+#reg  usint screen0[16]
+#reg  usint screen1[16]
+#reg  usint screen2[16]
+#reg  usint screen3[16]
+
+#defpou prgGame
+  usint snakePosX,
+  usint snakePosY,
+  usint snakeDirection,  ; 0 = right, 1 = down, 2 = left, 3 = up
+  usint applePosX,
+  usint applePosY,
+  bool appleExists,
+  usint[64] screen,
+  usint panelButton,
+  bool init
+
+#table byte __Init____screen0 = 
+      1;
+#table byte __Init____screen1 = 
+      0;
+#table byte __Init____screen2 = 
+      0;
+#table byte __Init____screen3 = 
+      0;
+ 
+#srcfile 'C:\TECOAPP\MC4GOTTSTEIN\PROHAD\PRGGAME.ST'
+#pou prgGame
+#srcline 11 ;PROGRAM prgGame
+
+#struct prgGame__temp__
+  usint i,
+  usint j,
+  usint P0__st__,
+  usint P1__st__
+P     61
+prgGame_L0:
+ LINK __SizeOf(prgGame__temp__)
+; Initialize - dynamic variables
+; End initialize - dynamic variables
+#srcline 33 ;  IF init THEN // Provede se pouze 1
+ LDX  init
+#debug bool init
+ JMC  prgGame_L1
+#srcline 34 ;    FOR i := 0 TO 3 DO
+ LD   usint 0
+ WRY  i
+ LD   usint 3
+ WRY  P0__st__
+prgGame_L3:
+ LDY  i
+ LDY  P0__st__
+ GT   
+ JMD  prgGame_L4
+ DBG  
+#srcline 35 ;      FOR j := 0 TO 15 DO
+ LD   usint 0
+ WRY  j
+ LD   usint 15
+ WRY  P1__st__
+prgGame_L5:
+ LDY  j
+ LDY  P1__st__
+ GT   
+ JMD  prgGame_L6
+ DBG  
+#srcline 36 ;        IF i = 0 THEN screen[i,j] := screen0[j];
+ LDY  i
+#debug usint i
+ LD   usint 0
+ EQ
+ JMC  prgGame_L7
+ LEA  screen0
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ LDI  
+#debug usint screen0[j]
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[i,j]
+#srcline 37 ;        ELSIF i = 0 THEN screen[i,j] := screen1[j];
+ JMP  prgGame_L8
+prgGame_L7:
+ LDY  i
+#debug usint i
+ LD   usint 0
+ EQ
+ JMC  prgGame_L9
+ LEA  screen1
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ LDI  
+#debug usint screen1[j]
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[i,j]
+#srcline 38 ;        ELSIF i = 0 THEN screen[i,j] := screen2[j];
+ JMP  prgGame_L8
+prgGame_L9:
+ LDY  i
+#debug usint i
+ LD   usint 0
+ EQ
+ JMC  prgGame_L10
+ LEA  screen2
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ LDI  
+#debug usint screen2[j]
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[i,j]
+#srcline 39 ;        ELSE screen[i,j] := screen3[j];
+ JMP  prgGame_L8
+prgGame_L10:
+ LEA  screen3
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD     ; + offset 
+ LDI  
+#debug usint screen3[j]
+ LEAX screen
+ LDY  i
+#debug usint i
+ RCHK 3   ; Range Check
+ MUL  16   ; Num items[2]
+ LDY  j
+#debug usint j
+ RCHK 15   ; Range Check
+ ADD
+ ADD     ; + offset 
+ WRI 
+#debug_left usint screen[i,j]
+#srcline 40 ;        END_IF;
+prgGame_L8:
+#srcline 41 ;      END_FOR;
+ LDY  j
+ LD   1
+ ADD  
+ WRY  j
+ JMP  prgGame_L5
+prgGame_L6:
+ NOP  -1
+#srcline 42 ;    END_FOR;
+ LDY  i
+ LD   1
+ ADD  
+ WRY  i
+ JMP  prgGame_L3
+prgGame_L4:
+ NOP  -1
+#srcline 43 ;    init := false;
+ LD   bool 0       ; false
+ WRX  init
+#debug_left bool init
+#srcline 44 ;  END_IF;
+prgGame_L1:
+#srcline 46 ;  IF not appleExists THEN
+ LDX  appleExists
+#debug bool appleExists
+ NEG
+ JMC  prgGame_L11
+#srcline 47 ;    applePosX := 6;
+ LD   usint 6
+ WRX  applePosX
+#debug_left usint applePosX
+#srcline 48 ;    applePosY := 3;
+ LD   usint 3
+ WRX  applePosY
+#debug_left usint applePosY
+#srcline 49 ;    appleExists := true;
+ LD   bool -1       ; true
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 50 ;  END_IF;
+prgGame_L11:
+#srcline 52 ;  IF ((snakePosX = applePosX) and (snakePosY = applePosY)) and appleExists THEN
+ LDX  snakePosX
+#debug usint snakePosX
+ LDX  applePosX
+#debug usint applePosX
+ EQ
+ LDX  snakePosY
+#debug usint snakePosY
+ LDX  applePosY
+#debug usint applePosY
+ EQ
+ AND
+ LDX  appleExists
+#debug bool appleExists
+ AND
+ JMC  prgGame_L13
+#srcline 53 ;    appleExists := false;
+ LD   bool 0       ; false
+ WRX  appleExists
+#debug_left bool appleExists
+#srcline 54 ;    score := score + 1;
+ LD   score
+#debug usint score
+ LD   usint 1
+ ADD
+ AND  $FF
+ WR   score
+#debug_left usint score
+#srcline 55 ;  END_IF;
+prgGame_L13:
+#srcline 57 ;END_PROGRAM
+ ULNK
+RET
+E     61
+
+; Initialize - variables
+P     61
+prgGame__InstanceInit__:
+ LINK 0
+ LD   usint 0
+ WRX  snakePosX
+ LD   usint 0
+ WRX  snakePosY
+ LD   usint 0
+ WRX  snakeDirection
+ LD   bool 0   ; false
+ WRX  appleExists
+ LD   usint 0
+ WRX  panelButton
+ LD   bool -1   ; true
+ WRX  init
+ ULNK
+RET
+E     61
+; End initialize - variables
+#endpou 
+
+
+P     58
+; Initialize non retain global variables 
+ LD   usint 0
+ WR   score
+ LD   usint 1
+ WR   speed
+ LD   0
+ SRC  byte __Init____screen0
+ LD   0
+ LD   16
+ MOV  byte screen0[0]
+ LD   0
+ SRC  byte __Init____screen1
+ LD   0
+ LD   16
+ MOV  byte screen1[0]
+ LD   0
+ SRC  byte __Init____screen2
+ LD   0
+ LD   16
+ MOV  byte screen2[0]
+ LD   0
+ SRC  byte __Init____screen3
+ LD   0
+ LD   16
+ MOV  byte screen3[0]
+E     58
+
+
+ 
+
+#srcfile ''

@@ -1,0 +1,90 @@
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\SYSGEN\HWCONFIG.ST'
+
+; Global variables
+#def  CPU_TYPE 75
+#def  CPU_CODE 1015
+
+; Global types
+#struct  TAIStat
+  bool UNF,
+  bool UNR,
+  bool OVR,
+  bool OVF,
+  bool FLS,
+  bool CJC,
+  bool dummy6,
+  bool dummy7,
+  bool CHC,
+  bool dummy9,
+  bool dummy10,
+  bool dummy11,
+  bool dummy12,
+  bool dummy13,
+  bool dummy14,
+  bool dummy15
+#struct  TAI
+  TAIStat STAT,
+  int FS,
+  real ENG,
+  real PCT
+#struct  TAO_TC6
+  int FS,
+  real ENG,
+  real PCT
+#struct  TBIN_6DI
+  bool DI0,
+  bool DI1,
+  bool DI2,
+  bool DI3,
+  bool DI4,
+  bool DI5
+#struct  TBIN_6DO
+  bool DO0,
+  bool DO1,
+  bool DO2,
+  bool DO3,
+  bool DO4,
+  bool DO5
+#struct  TCHStatistic
+  usint STAT,
+  usint ERR,
+  udint trueMes,
+  udint falseMes
+#struct  TCHControl
+  uint CONTROL
+
+; Global variables
+#def  r0_p0_Statistic_CH1 TCHStatistic %X7500
+#def  r0_p0_Control_CH1 TCHControl %Y7500
+
+; Global variables
+#reg  usint OI1073_Keyb
+#reg  usint OI1073_VideoRam[80]
+#def  panel OI1073_Keyb
+
+; Global variables
+#def  r0_p2_Statistic_MI_CIB1 TCHStatistic %X0
+#def  r0_p2_Control_MI_CIB1 TCHControl %Y0
+
+; Global variables
+#def  r0_p3_DI TBIN_6DI %X30
+#def  r0_p3_dummy0 usint %X31
+#def  r0_p3_AI0 TAI %X32
+#def  r0_p3_AI1 TAI %X44
+#def  r0_p3_AI2 TAI %X56
+#def  r0_p3_AI3 TAI %X68
+#def  r0_p3_AI4 TAI %X80
+#def  r0_p3_AI5 TAI %X92
+#def  r0_p3_DO TBIN_6DO %Y6
+#def  r0_p3_dummy1 usint %Y7
+#def  r0_p3_AO0 TAO_TC6 %Y8
+#def  r0_p3_AO1 TAO_TC6 %Y18
+
+; Global variables
+ 
+#srcfile 'C:\MOSAICAPP\MC4GOTTSTEIN\PROHAD\SYSGEN\HWCONFIG.ST'
+
+
+ 
+
+#srcfile ''

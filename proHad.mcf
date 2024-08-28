@@ -1,0 +1,6 @@
+CONFIGURATION proHad
+  RESOURCE CPM
+    TASK FreeWheeling(Number := 0);
+    PROGRAM Game WITH FreeWheeling : prgGame ();
+  END_RESOURCE
+END_CONFIGURATION
